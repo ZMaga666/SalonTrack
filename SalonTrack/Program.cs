@@ -17,10 +17,15 @@ namespace SalonTrack
     .AddCookie("SalonCookie", options =>
     {
         options.LoginPath = "/Account/Login";
+<<<<<<< HEAD
         options.AccessDeniedPath = "/Account/Logout";
     });
             builder.Services.AddAuthorization();
             builder.Services.AddSession();
+=======
+        options.AccessDeniedPath = "/Account/AccessDenied";
+    });
+>>>>>>> 628c14e2a8aca7943f06cdbe48c7f06a240d03be
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
@@ -33,11 +38,16 @@ namespace SalonTrack
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+<<<<<<< HEAD
             app.UseSession();
+=======
+
+>>>>>>> 628c14e2a8aca7943f06cdbe48c7f06a240d03be
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+<<<<<<< HEAD
             app.UseAuthentication();
             app.UseAuthorization();
             //app.MapAreaControllerRoute(
@@ -52,6 +62,18 @@ namespace SalonTrack
                     pattern: "{controller=Account}/{action=Login}/{id?}");
             });
 
+=======
+
+            app.UseAuthorization();
+            app.MapControllerRoute(
+    name: "dashboard",
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}");
+
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}");
+>>>>>>> 628c14e2a8aca7943f06cdbe48c7f06a240d03be
 
             app.Run();
         }
