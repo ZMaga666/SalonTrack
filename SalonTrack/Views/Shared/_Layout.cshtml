@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="az">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,43 +7,133 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SalonTrack.styles.css" asp-append-version="true" />
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+
+            body.light-mode {
+                background: linear-gradient(to right, #fff0f5, #e0f7fa);
+                color: #333;
+            }
+
+            body.dark-mode {
+                background-color: #121212;
+                color: #f1f1f1;
+            }
+
+        .navbar {
+            transition: background 0.3s;
+        }
+
+        .light-mode .navbar {
+            background-color: #fff !important;
+            border-bottom: 2px solid #f8c6d8;
+        }
+
+        .dark-mode .navbar {
+            background-color: #1f1f1f !important;
+            border-bottom: 1px solid #444;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.6rem;
+            color: #e91e63 !important;
+        }
+
+        .nav-link {
+            color: inherit !important;
+        }
+
+        .footer {
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .light-mode .footer {
+            background-color: #ffeef5;
+            color: #666;
+        }
+
+        .dark-mode .footer {
+            background-color: #1a1a1a;
+            color: #aaa;
+        }
+
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+    </style>
 </head>
-<body>
+<body class="light-mode">
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SalonTrack</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <a class="navbar-brand d-flex align-items-center" asp-controller="Dashboard" asp-action="Index">
+                    💅 SalonTrack
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end align-items-center">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" asp-controller="ServiceTask" asp-action="Index">📝 İşlər</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Expense" asp-action="Index">💸 Xərclər</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Income" asp-action="Index">📈 Gəlirlər</a></li>
+                        <li class="nav-item"><a class="nav-link" asp-controller="Service" asp-action="Index">💇‍♀️ Servislər</a></li>
                     </ul>
+                    <button id="themeToggle" class="theme-toggle-btn ms-3" title="Tema Dəyiş">🌙</button>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="container py-4">
+        <main role="main" class="pb-4">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-center border-top">
         <div class="container">
-            &copy; 2025 - SalonTrack - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - SalonTrack 💖 |
+            <a class="text-decoration-none" asp-controller="Home" asp-action="Privacy">Gizlilik</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <script>
+        const toggleBtn = document.getElementById('themeToggle');
+        const body = document.body;
+
+        // Yadda saxlanmış rejimi oxu
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            body.className = savedTheme;
+            toggleBtn.textContent = savedTheme === 'dark-mode' ? '☀️' : '🌙';
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            if (body.classList.contains('light-mode')) {
+                body.className = 'dark-mode';
+                toggleBtn.textContent = '☀️';
+                localStorage.setItem('theme', 'dark-mode');
+            } else {
+                body.className = 'light-mode';
+                toggleBtn.textContent = '🌙';
+                localStorage.setItem('theme', 'light-mode');
+            }
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -16,6 +16,7 @@ namespace SalonTrack.Data
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Credit> Credits { get; set; }
         public DbSet<Income> Incomes { get; set; }
+        public DbSet<Service> Services { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

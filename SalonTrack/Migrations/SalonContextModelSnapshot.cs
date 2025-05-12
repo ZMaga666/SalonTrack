@@ -94,6 +94,26 @@ namespace SalonTrack.Migrations
                     b.ToTable("Incomes");
                 });
 
+            modelBuilder.Entity("SalonTrack.Models.Service", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
+                });
+
             modelBuilder.Entity("SalonTrack.Models.ServiceTask", b =>
                 {
                     b.Property<int>("Id")
@@ -115,7 +135,12 @@ namespace SalonTrack.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int?>("ServiceId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
 
                     b.ToTable("ServiceTasks");
                 });
@@ -147,6 +172,15 @@ namespace SalonTrack.Migrations
                             Password = "admin123",
                             Username = "admin"
                         });
+                });
+
+            modelBuilder.Entity("SalonTrack.Models.ServiceTask", b =>
+                {
+                    b.HasOne("SalonTrack.Models.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId");
+
+                    b.Navigation("Service");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,7 @@
 ﻿// Dashboard/Controllers/ServiceTaskController.cs
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 using SalonTrack.Data;
 using SalonTrack.Models;
@@ -28,21 +29,56 @@ namespace SalonTrack.Contollers
         [HttpGet]
         public IActionResult Create()
         {
+            ViewBag.Services = _context.Services
+        .Select(s => new SelectListItem
+        {
+            Value = s.Id.ToString(),
+            Text = s.Name
+        }).ToList();
+
             return View();
         }
-
         [HttpPost]
         public IActionResult Create(ServiceTask task)
         {
-            if (ModelState.IsValid)
+            ViewBag.Services = _context.Services
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Name
+                }).ToList();
+
+            if (!ModelState.IsValid)
+                return View(task);
+
+            var selectedService = _context.Services.FirstOrDefault(s => s.Id == task.ServiceId);
+            if (selectedService == null)
             {
-                task.Date = DateTime.Now;
-                _context.ServiceTasks.Add(task);
-                _context.SaveChanges();
-                return RedirectToAction("Index");
+                ModelState.AddModelError("ServiceId", "Xidmət tapılmadı.");
+                return View(task);
             }
-            return View(task);
+
+            
+            task.Description = selectedService.Name;
+            task.Date = DateTime.Now;
+
+            _context.ServiceTasks.Add(task);
+
+            if (!task.IsCredit)
+            {
+                var income = new Income
+                {
+                    Amount = task.Price,
+                    Date = task.Date
+                };
+                _context.Incomes.Add(income);
+            }
+
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
+
+
 
         [HttpPost]
         public IActionResult Delete(int id)

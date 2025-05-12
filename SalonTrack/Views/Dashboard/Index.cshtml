@@ -2,49 +2,83 @@
     ViewData["Title"] = "SalonTrack Admin Panel";
 }
 
-<!DOCTYPE html>
-<html lang="az">
-<head>
-    <meta charset="utf-8" />
-    <title>@ViewData["Title"]</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-</head>
-<body class="bg-light">
-    <div class="container py-5">
-        <h2 class="mb-4 text-center">💼 Admin Panel - SalonTrack</h2>
+<style>
+    body {
+        background: linear-gradient(to right, #f8e1f4, #e1f0ff);
+        font-family: 'Segoe UI', sans-serif;
+    }
 
-        <div class="row justify-content-center">
-            <div class="col-md-4">
-                <div class="card text-white bg-success mb-3 shadow">
-                    <div class="card-body text-center">
-                        <h4 class="card-title">📈 Gəlirlər</h4>
-                        <p class="card-text">Salon gəlirlərinə bax və yeni gəlir əlavə et.</p>
-                        <a href="/Income/Index" class="btn btn-light">Bax</a>
-                    </div>
+    .card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: none;
+        border-radius: 1rem;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+    .card-title {
+        font-weight: bold;
+        font-size: 1.3rem;
+    }
+
+    .btn-light {
+        font-weight: 600;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #444;
+        margin-bottom: 2rem;
+    }
+</style>
+
+<div class="container py-5">
+    <h2 class="text-center section-title">💇‍♀️ SalonTrack - Admin Panel</h2>
+
+
+    <div class="row g-4 justify-content-center">
+        <div class="col-sm-6 col-md-3">
+            <div class="card text-white bg-success shadow">
+                <div class="card-body text-center">
+                    <h4 class="card-title">📈 Gəlirlər</h4>
+                    <p class="card-text">Salon gəlirlərinə bax və əlavə et.</p>
+                    <a href="/Income/Index" class="btn btn-light">Bax</a>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-4">
-                <div class="card text-white bg-danger mb-3 shadow">
-                    <div class="card-body text-center">
-                        <h4 class="card-title">💸 Xərclər</h4>
-                        <p class="card-text">Salonun xərclərini idarə et.</p>
-                        <a href="/Expense/Index" class="btn btn-light">Bax</a>
-                    </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card text-white bg-danger shadow">
+                <div class="card-body text-center">
+                    <h4 class="card-title">💸 Xərclər</h4>
+                    <p class="card-text">Salonun xərclərini idarə et.</p>
+                    <a href="/Expense/Index" class="btn btn-light">Bax</a>
                 </div>
             </div>
+        </div>
 
-            <div class="col-md-4">
-                <div class="card text-white bg-primary mb-3 shadow">
-                    <div class="card-body text-center">
-                        <h4 class="card-title">📝 Xidmət Tapşırıqları</h4>
-                        <p class="card-text">Bugünkü və keçmiş tapşırıqları izləyin.</p>
-                        <a href="/ServiceTask/Index" class="btn btn-light">Bax</a>
-                    </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card text-white bg-primary shadow">
+                <div class="card-body text-center">
+                    <h4 class="card-title">📝 Tapşırıqlar</h4>
+                    <p class="card-text">İşçi tapşırıqlarını izləyin və əlavə edin.</p>
+                    <a href="/ServiceTask/Index" class="btn btn-light">Bax</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-md-3">
+            <div class="card text-white bg-info shadow">
+                <div class="card-body text-center">
+                    <h4 class="card-title">💇‍♀️ Servislər</h4>
+                    <p class="card-text">|Əlavə et və qiymətlərini təyin et.</p>
+                    <a href="/Service/Index" class="btn btn-light">Bax</a>
                 </div>
             </div>
         </div>
     </div>
-</body>
-</html>
+</div>

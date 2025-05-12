@@ -1,0 +1,105 @@
+﻿@model SalonTrack.ViewModels.IncomeListViewModel
+
+@{
+    ViewData["Title"] = "Gəlirlər Siyahısı";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<div class="row mb-4 text-center">
+    <div class="col-md-3">
+        <div class="p-3 bg-light shadow rounded">
+            <h6>📅 Bu Gün</h6>
+            <span class="text-success h5">@Model.TodayTotal ₼</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-3 bg-light shadow rounded">
+            <h6>🗓️ Bu Həftə</h6>
+            <span class="text-success h5">@Model.ThisWeekTotal ₼</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-3 bg-light shadow rounded">
+            <h6>📆 Bu Ay</h6>
+            <span class="text-success h5">@Model.ThisMonthTotal ₼</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-3 bg-light shadow rounded">
+            <h6>🗓️ Bu İl</h6>
+            <span class="text-success h5">@Model.ThisYearTotal ₼</span>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info mt-3">
+    <strong>💰 Yekun Gəlir (Net): </strong>
+    <span class="h5">@Model.NetTotal ₼</span>
+    <span class="text-muted">(Gəlir: @Model.Total ₼ - Xərc: @Model.TotalExpense ₼)</span>
+</div>
+
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">📈 Gəlir Məlumatları</h2>
+
+    <div class="mb-3 d-flex justify-content-between align-items-end">
+        <a class="btn btn-success" href="/Income/Create">➕ Yeni Gəlir Əlavə Et</a>
+
+        <form asp-action="FilteredList" method="get" class="d-flex gap-2">
+            <div>
+                <label>Başlanğıc Tarix</label>
+                <input type="date" name="startDate" class="form-control"
+                       value="@Model?.StartDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div>
+                <label>Bitmə Tarix</label>
+                <input type="date" name="endDate" class="form-control"
+                       value="@Model?.EndDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="pt-2">
+                <button type="submit" class="btn btn-primary">🔍 Filtr Et</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mb-3">
+        <strong>Ümumi Gəlir:</strong>
+        <span class="text-success h5">@Model.Total ₼</span>
+    </div>
+
+    <table class="table table-bordered table-striped shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Məbləğ (₼)</th>
+                <th>Tarix</th>
+                <th>Əməliyyat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Incomes != null && Model.Incomes.Any())
+            {
+                int count = 1;
+                foreach (var item in Model.Incomes)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@item.Amount</td>
+                        <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <a href="/Income/Edit/@item.Id" class="btn btn-sm btn-warning">✏️ Dəyiş</a>
+                            <a href="/Income/Delete/@item.Id" class="btn btn-sm btn-danger">❌ Sil</a>
+                        </td>
+                    </tr>
+                    count++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Heç bir gəlir qeyd olunmayıb.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
