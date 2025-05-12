@@ -1,0 +1,166 @@
+﻿@model SalonTrack.ViewModels.IncomeListViewModel
+
+@{
+    ViewData["Title"] = "Gəlirlər Siyahısı";
+}
+
+<style>
+    body.dark-mode .bg-light {
+        background-color: #1f1f1f !important;
+        color: #f1f1f1 !important;
+    }
+
+    body.dark-mode .alert-info {
+        background-color: #2a2a2a;
+        color: #ddd;
+        border-color: #444;
+    }
+
+    body.dark-mode .form-control {
+        background-color: #1e1e1e;
+        color: #f1f1f1;
+        border-color: #444;
+    }
+
+    body.dark-mode .table {
+        background-color: #1e1e1e;
+        color: #f1f1f1;
+    }
+
+    body.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #2a2a2a;
+    }
+
+    body.dark-mode .table-dark {
+        background-color: #292929;
+    }
+
+    body.dark-mode .text-muted {
+        color: #aaa !important;
+    }
+
+    body.dark-mode .btn-primary {
+        background-color: #375a7f;
+        border-color: #375a7f;
+    }
+
+    body.dark-mode .btn-success {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+    body.dark-mode .btn-warning {
+        background-color: #ffc107;
+        border-color: #e0a800;
+        color: #000;
+    }
+
+    body.dark-mode .btn-danger {
+        background-color: #dc3545;
+        border-color: #bd2130;
+    }
+
+    body.dark-mode h2,
+    body.dark-mode label,
+    body.dark-mode strong {
+        color: #f1f1f1;
+    }
+</style>
+
+<div class="row mb-4 text-center">
+    <div class="col-md-3">
+        <div class="p-3 bg-light shadow rounded">
+            <h6>📅 Bu Gün</h6>
+            <span class="text-success h5">@Model.TodayTotal ₼</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-3 bg-light shadow rounded">
+            <h6>🗓️ Bu Həftə</h6>
+            <span class="text-success h5">@Model.ThisWeekTotal ₼</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-3 bg-light shadow rounded">
+            <h6>📆 Bu Ay</h6>
+            <span class="text-success h5">@Model.ThisMonthTotal ₼</span>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="p-3 bg-light shadow rounded">
+            <h6>🗓️ Bu İl</h6>
+            <span class="text-success h5">@Model.ThisYearTotal ₼</span>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info mt-3">
+    <strong>💰 Yekun Gəlir (Net): </strong>
+    <span class="h5">@Model.NetTotal ₼</span>
+    <span class="text-muted">(Gəlir: @Model.Total ₼ - Xərc: @Model.TotalExpense ₼)</span>
+</div>
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">📈 Gəlir Məlumatları</h2>
+
+    <div class="mb-3 d-flex justify-content-between align-items-end">
+       @*  <a class="btn btn-success" href="/Income/Create">➕ Yeni Gəlir Əlavə Et</a> *@
+
+        <form asp-action="FilteredList" method="get" class="d-flex gap-2">
+            <div>
+                <label>Başlanğıc Tarix</label>
+                <input type="date" name="startDate" class="form-control"
+                       value="@Model?.StartDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div>
+                <label>Bitmə Tarix</label>
+                <input type="date" name="endDate" class="form-control"
+                       value="@Model?.EndDate?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="pt-2">
+                <button type="submit" style="margin:0px 20px 0px 0px; " class="btn btn-primary">🔍 Filtr Et</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="mb-3">
+        <strong>Ümumi Gəlir:</strong>
+        <span class="text-success h5">@Model.Total ₼</span>
+    </div>
+
+    <table class="table table-bordered table-striped shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Məbləğ (₼)</th>
+                <th>Tarix</th>
+                <th>Əməliyyat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Incomes != null && Model.Incomes.Any())
+            {
+                int count = 1;
+                foreach (var item in Model.Incomes)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@item.Amount</td>
+                        <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <a href="/Income/Edit/@item.Id" class="btn btn-sm btn-warning">✏️ Dəyiş</a>
+                            <a href="/Income/Delete/@item.Id" class="btn btn-sm btn-danger">❌ Sil</a>
+                        </td>
+                    </tr>
+                    count++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Heç bir gəlir qeyd olunmayıb.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

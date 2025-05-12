@@ -1,11 +1,29 @@
 ﻿@using SalonTrack.Models
-// Views/Expense/Create.cshtml
 @model Expense
 @{
     ViewData["Title"] = "Yeni Xərc Əlavə Et";
 }
 
-<h2>Yeni Xərc Əlavə Et</h2>
+<style>
+    body.dark-mode input,
+    body.dark-mode label,
+    body.dark-mode .form-control {
+        background-color: #1e1e1e;
+        color: #f1f1f1;
+        border-color: #444;
+    }
+
+    body.dark-mode .btn-primary {
+        background-color: #375a7f;
+        border-color: #375a7f;
+    }
+
+    h2 {
+        color: inherit;
+    }
+</style>
+
+<h2>💸 Yeni Xərc Əlavə Et</h2>
 
 <form asp-action="Create" method="post">
     <div class="mb-3">

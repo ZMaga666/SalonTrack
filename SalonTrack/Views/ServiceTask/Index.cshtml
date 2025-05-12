@@ -1,5 +1,5 @@
 ﻿@using SalonTrack.Models
-/Dashboard/ServiceTask/Index.cshtml
+
 @model List<ServiceTask>
 @{
     ViewData["Title"] = "Görülən İşlər";
@@ -22,9 +22,9 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@item.Income.Date.ToString("dd.MM.yyyy HH:mm")</td>
                 <td>@item.Description</td>
-                <td>@item.Price.ToString("0.00") ₼</td>
+                <td>@item.Income.Amount.ToString("0.00") ₼</td>
                 <td>@(item.IsCredit ? "Nisyə" : "Nağd")</td>
                 <td>
                     <form asp-action="Delete" method="post">

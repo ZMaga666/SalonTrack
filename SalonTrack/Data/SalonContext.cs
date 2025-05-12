@@ -16,6 +16,7 @@ namespace SalonTrack.Data
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Credit> Credits { get; set; }
         public DbSet<Income> Incomes { get; set; }
+        public DbSet<Service> Services { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +29,11 @@ namespace SalonTrack.Data
                 Username = "admin",
                 Password = "admin123" // NOT SECURE – just for demo
             });
+            modelBuilder.Entity<ServiceTask>()
+      .HasOne(st => st.Income)
+      .WithMany()
+      .HasForeignKey(st => st.IncomeId)
+      .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

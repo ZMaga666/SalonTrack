@@ -1,14 +1,43 @@
 ﻿@using SalonTrack.Models
-// Views/Expense/Index.cshtml
 @model List<Expense>
 @{
     ViewData["Title"] = "Xərclər";
 }
 
-<h2>Xərclər</h2>
+<style>
+    body.dark-mode h2 {
+        color: #f1f1f1;
+    }
+
+    body.dark-mode table {
+        background-color: #1e1e1e;
+        color: #f1f1f1;
+    }
+
+    body.dark-mode thead {
+        background-color: #292929;
+    }
+
+    body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+        background-color: #2a2a2a;
+    }
+
+    body.dark-mode .btn-danger {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    body.dark-mode .btn-success {
+        background-color: #28a745;
+        border-color: #218838;
+    }
+</style>
+
+<h2>💸 Xərclər</h2>
+
 <a class="btn btn-success mb-3" asp-action="Create">Yeni Xərc Əlavə Et</a>
 
-<table class="table table-striped">
+<table class="table table-striped shadow rounded">
     <thead>
         <tr>
             <th>Tarix</th>

@@ -1,0 +1,16 @@
+﻿@model SalonTrack.Models.Service
+@{
+    ViewData["Title"] = "Xidmət Əlavə Et";
+}
+
+<h2>Yeni Xidmət Əlavə Et</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label">Xidmətin Adı</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+   
+    <button type="submit" class="btn btn-primary">Əlavə et</button>
+    <a asp-action="Index" class="btn btn-secondary">Geri</a>
+</form>

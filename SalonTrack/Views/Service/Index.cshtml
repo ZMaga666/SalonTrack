@@ -1,0 +1,28 @@
+﻿@model List<SalonTrack.Models.Service>
+@{
+    ViewData["Title"] = "Xidmət Siyahısı";
+}
+
+<h2>💈 Xidmətlər</h2>
+
+<a asp-action="Create" class="btn btn-success mb-3">➕ Yeni Xidmət Əlavə Et</a>
+
+<table class="table table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>#</th>
+            <th>Ad</th>
+           
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <td>@(i + 1)</td>
+                <td>@Model[i].Name</td>
+              
+            </tr>
+        }
+    </tbody>
+</table>

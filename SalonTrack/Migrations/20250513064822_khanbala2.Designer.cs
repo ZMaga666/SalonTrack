@@ -12,8 +12,8 @@ using SalonTrack.Data;
 namespace SalonTrack.Migrations
 {
     [DbContext(typeof(SalonContext))]
-    [Migration("20250506114002_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250513064822_khanbala2")]
+    partial class khanbala2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -97,6 +97,23 @@ namespace SalonTrack.Migrations
                     b.ToTable("Incomes");
                 });
 
+            modelBuilder.Entity("SalonTrack.Models.Service", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Services");
+                });
+
             modelBuilder.Entity("SalonTrack.Models.ServiceTask", b =>
                 {
                     b.Property<int>("Id")
@@ -105,20 +122,24 @@ namespace SalonTrack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("IncomeId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsCredit")
                         .HasColumnType("bit");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<int?>("ServiceId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IncomeId");
+
+                    b.HasIndex("ServiceId");
 
                     b.ToTable("ServiceTasks");
                 });
@@ -150,6 +171,21 @@ namespace SalonTrack.Migrations
                             Password = "admin123",
                             Username = "admin"
                         });
+                });
+
+            modelBuilder.Entity("SalonTrack.Models.ServiceTask", b =>
+                {
+                    b.HasOne("SalonTrack.Models.Income", "Income")
+                        .WithMany()
+                        .HasForeignKey("IncomeId");
+
+                    b.HasOne("SalonTrack.Models.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId");
+
+                    b.Navigation("Income");
+
+                    b.Navigation("Service");
                 });
 #pragma warning restore 612, 618
         }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SalonTrack.Data;
 
@@ -11,9 +12,11 @@ using SalonTrack.Data;
 namespace SalonTrack.Migrations
 {
     [DbContext(typeof(SalonContext))]
-    partial class SalonContextModelSnapshot : ModelSnapshot
+    [Migration("20250508121231_Initial2")]
+    partial class Initial2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -106,6 +109,9 @@ namespace SalonTrack.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Services");
@@ -119,22 +125,23 @@ namespace SalonTrack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("IncomeId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsCredit")
                         .HasColumnType("bit");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int?>("ServiceId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IncomeId");
 
                     b.HasIndex("ServiceId");
 
@@ -172,16 +179,9 @@ namespace SalonTrack.Migrations
 
             modelBuilder.Entity("SalonTrack.Models.ServiceTask", b =>
                 {
-                    b.HasOne("SalonTrack.Models.Income", "Income")
-                        .WithMany()
-                        .HasForeignKey("IncomeId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("SalonTrack.Models.Service", "Service")
                         .WithMany()
                         .HasForeignKey("ServiceId");
-
-                    b.Navigation("Income");
 
                     b.Navigation("Service");
                 });
