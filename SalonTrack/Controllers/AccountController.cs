@@ -1,24 +1,18 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SalonTrack.Data;
-using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
-
-using System.Threading.Tasks;
-
+using SalonTrack.Models;
 
 namespace SalonTrack.Controllers
 {
- 
-
-
     public class AccountController : Controller
     {
-        private readonly SalonContext _context;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public AccountController(SalonContext context)
+        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -30,32 +24,40 @@ namespace SalonTrack.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
-            var user = _context.Users.FirstOrDefault(u => u.Username == username && u.Password == password);
-
+            var user = await _userManager.FindByNameAsync(username);
             if (user == null)
             {
-                ViewBag.Error = "İstifadəçi adı və ya parol yalnışdır.";
+                ViewBag.Error = "İstifadəçi tapılmadı.";
                 return View();
             }
 
-            var claims = new List<Claim>
-        {
-            new Claim(ClaimTypes.Name, user.Username)
-        };
+            var result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
+            if (!result.Succeeded)
+            {
+                ViewBag.Error = "Parol yalnışdır.";
+                return View();
+            }
 
-            var identity = new ClaimsIdentity(claims, "SalonCookie");
-            var principal = new ClaimsPrincipal(identity);
+            var roles = await _userManager.GetRolesAsync(user);
 
-            await HttpContext.SignInAsync("SalonCookie", principal);
+            // Rol əsaslı yönləndirmə
+            if (roles.Contains("Admin"))
+                return RedirectToAction("Index", "Dashboard");
+            else if (roles.Contains("Moderator"))
+                return RedirectToAction("Index", "ServiceTask");
 
-            return RedirectToAction("Index", "Dashboard");
+            return RedirectToAction("Login");
         }
 
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync("SalonCookie");
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Login");
         }
-    }
 
+        public IActionResult AccessDenied()
+        {
+            return Content("Bu səhifəyə giriş icazəniz yoxdur.");
+        }
+    }
 }

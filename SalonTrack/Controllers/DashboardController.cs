@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace SalonTrack.Controllers
 {
-    
+    [Authorize(Roles = "Admin")]
     public class Dashboard : Controller
     {
         public IActionResult Index()

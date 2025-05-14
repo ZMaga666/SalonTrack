@@ -1,17 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SalonTrack.Models;
-using System.Collections.Generic;
-using System.Reflection.Emit;
-
 
 namespace SalonTrack.Data
 {
-
-    public class SalonContext : DbContext
+    public class SalonContext : IdentityDbContext<ApplicationUser>
     {
         public SalonContext(DbContextOptions<SalonContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }
         public DbSet<ServiceTask> ServiceTasks { get; set; }
         public DbSet<Expense> Expenses { get; set; }
         public DbSet<Credit> Credits { get; set; }
@@ -22,18 +18,12 @@ namespace SalonTrack.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Optional: Seed an initial user
-            modelBuilder.Entity<User>().HasData(new User
-            {
-                Id = 1,
-                Username = "admin",
-                Password = "admin123" // NOT SECURE – just for demo
-            });
+            // ServiceTask → Income cascade relation
             modelBuilder.Entity<ServiceTask>()
-      .HasOne(st => st.Income)
-      .WithMany()
-      .HasForeignKey(st => st.IncomeId)
-      .OnDelete(DeleteBehavior.Cascade);
+                .HasOne(st => st.Income)
+                .WithMany()
+                .HasForeignKey(st => st.IncomeId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

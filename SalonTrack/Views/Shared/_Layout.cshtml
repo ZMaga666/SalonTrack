@@ -7,44 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SalonTrack.styles.css" asp-append-version="true" />
+
     <style>
-
-
-        /* DARK MODE üçün uyğun fon və yazı rəngləri */
-        body.dark-mode .card,
-        body.dark-mode .form-control,
-        body.dark-mode .table,
-        body.dark-mode input,
-        body.dark-mode select {
-            background-color: #1e1e1e !important;
-            color: #f1f1f1 !important;
-            border-color: #444 !important;
-        }
-
-            body.dark-mode .table th,
-            body.dark-mode .table td {
-                background-color: #1e1e1e !important;
-                color: #f1f1f1 !important;
-            }
-
-        body.dark-mode .btn {
-            color: white !important;
-        }
-
-        /* Alert mesajları üçün */
-        body.dark-mode .alert {
-            background-color: #2a2a2a;
-            color: #ddd;
-            border-color: #444;
-        }
-
-        /* Date input üçün təkmilləşdirmə */
-        body.dark-mode input[type="date"] {
-            background-color: #1e1e1e;
-            color: #f1f1f1;
-        }
-
-
         html {
             transition: background 0.5s, color 0.5s;
         }
@@ -53,15 +17,49 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
+            /* Light Mode */
             body.light-mode {
-                background: linear-gradient(to right, #fff0f5, #e0f7fa);
+                background: linear-gradient(to right, #f8e1f4, #e1f0ff);
                 color: #222;
             }
 
+            /* Dark Mode */
             body.dark-mode {
-                background-color: #121212;
+                background: linear-gradient(to right, #1a1a, #16213e);
                 color: #f1f1f1;
             }
+
+                /* Dark Mode overrides */
+                body.dark-mode .card,
+                body.dark-mode .form-control,
+                body.dark-mode .table,
+                body.dark-mode input,
+                body.dark-mode select {
+                    background-color: #1e1e1e !important;
+                    color: #f1f1f1 !important;
+                    border-color: #444 !important;
+                }
+
+                    body.dark-mode .table th,
+                    body.dark-mode .table td {
+                        background-color: #1e1e1e !important;
+                        color: #f1f1f1 !important;
+                    }
+
+                body.dark-mode .btn {
+                    color: white !important;
+                }
+
+                body.dark-mode .alert {
+                    background-color: #2a2a2a;
+                    color: #ddd;
+                    border-color: #444;
+                }
+
+                body.dark-mode input[type="date"] {
+                    background-color: #1e1e1e;
+                    color: #f1f1f1;
+                }
 
         .navbar {
             transition: background 0.3s;
@@ -157,11 +155,11 @@
         const body = document.body;
         const toggleBtn = document.getElementById('themeToggle');
 
-        // Sistem rejimi aşkarla (ilk girişdə)
         const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
         const savedTheme = localStorage.getItem('theme');
         const defaultTheme = savedTheme || (prefersDark ? 'dark-mode' : 'light-mode');
+
+        body.classList.remove("light-mode", "dark-mode");
         body.classList.add(defaultTheme);
         toggleBtn.textContent = defaultTheme === 'dark-mode' ? '☀️' : '🌙';
 

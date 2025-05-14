@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace SalonTrack.Contollers
 {
-    [Authorize]
+    [Authorize(Roles = "Moderator,Admin")]
     public class ServiceTaskController : Controller
     {
         private readonly SalonContext _context;

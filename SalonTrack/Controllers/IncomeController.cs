@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace SalonTrack.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class IncomeController : Controller
     {
         private readonly SalonContext _context;
