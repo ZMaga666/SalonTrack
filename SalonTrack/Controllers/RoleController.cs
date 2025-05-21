@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using SalonTrack.Models;
 
 [Authorize(Roles = "Admin")]
@@ -14,9 +15,20 @@ public class RoleController : Controller
         _roleManager = roleManager;
         _userManager = userManager;
     }
+    [HttpGet]
+    public IActionResult Index()
+    {
+        var roles = _roleManager.Roles.ToList();
+        return View(roles);
+    }
 
     [HttpGet]
-    public IActionResult CreateUser() => View();
+    public IActionResult CreateUser()
+    {
+        var roles = _roleManager.Roles.Select(r => r.Name).ToList();
+        ViewBag.Roles = new SelectList(roles); // ✅ DropDown üçün göndərilir
+        return View();
+    }
 
     [HttpPost]
     public async Task<IActionResult> CreateUser(string username, string password, string role)
@@ -49,4 +61,16 @@ public class RoleController : Controller
 
         return RedirectToAction("CreateUser");
     }
+    [HttpPost]
+    public async Task<IActionResult> DeleteRole(string roleName)
+    {
+        var role = await _roleManager.FindByNameAsync(roleName);
+        if (role != null)
+        {
+            await _roleManager.DeleteAsync(role);
+        }
+
+        return RedirectToAction("Index");
+    }
+
 }

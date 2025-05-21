@@ -9,6 +9,55 @@
     <link rel="stylesheet" href="~/SalonTrack.styles.css" asp-append-version="true" />
 
     <style>
+        body.dark-mode .navbar .dropdown-toggle {
+            background-color: #1e1e1e !important;
+            color: #f1f1f1 !important;
+            border-radius: 5px;
+            padding: 6px 10px;
+        }
+
+        body.light-mode .navbar .dropdown-toggle {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            border-radius: 5px;
+            padding: 6px 10px;
+        }
+
+        body.dark-mode .navbar .dropdown-toggle:hover {
+            background-color: #2a2a2a !important;
+        }
+
+        body.light-mode .navbar .dropdown-toggle:hover {
+            background-color: #f1f1f1 !important;
+        }
+        .logout-btn {
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        /* Logout düyməsi üçün light və dark mode uyğun dizayn */
+        body.light-mode .logout-btn {
+            background-color: #fff;
+            color: #000;
+        }
+
+        body.dark-mode .logout-btn {
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+
+        body.light-mode .logout-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        body.dark-mode .logout-btn:hover {
+            background-color: #333;
+        }
+
+
         html {
             transition: background 0.5s, color 0.5s;
         }
@@ -17,19 +66,16 @@
             font-family: 'Segoe UI', sans-serif;
         }
 
-            /* Light Mode */
             body.light-mode {
                 background: linear-gradient(to right, #f8e1f4, #e1f0ff);
                 color: #222;
             }
 
-            /* Dark Mode */
             body.dark-mode {
                 background: linear-gradient(to right, #1a1a, #16213e);
                 color: #f1f1f1;
             }
 
-                /* Dark Mode overrides */
                 body.dark-mode .card,
                 body.dark-mode .form-control,
                 body.dark-mode .table,
@@ -116,20 +162,48 @@
     <header>
         <nav class="navbar navbar-expand-sm">
             <div class="container-fluid">
-                <a class="navbar-brand d-flex align-items-center" asp-controller="Dashboard" asp-action="Index">
-                    💅 SalonTrack
-                </a>
+                <a class="navbar-brand" asp-controller="Dashboard" asp-action="Index">💅 SalonTrack</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end align-items-center">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link" asp-controller="ServiceTask" asp-action="Index">📝 İşlər</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Expense" asp-action="Index">💸 Xərclər</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Income" asp-action="Index">📈 Gəlirlər</a></li>
-                        <li class="nav-item"><a class="nav-link" asp-controller="Service" asp-action="Index">💇‍♀️ Servislər</a></li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    ⚙️ Əməliyyatlar
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="ServiceTask" asp-action="Index">📝 İşlər</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Expense" asp-action="Index">💸 Xərclər</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Income" asp-action="Index">📈 Gəlirlər</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Service" asp-action="Index">💇‍♀️ Servislər</a></li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
-                    <button id="themeToggle" class="theme-toggle-btn ms-3" title="Tema Dəyiş">🌙</button>
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" backgr >
+                                    👤 @User.Identity.Name
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="px-3">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm logout-btn">🚪 Çıxış</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item ms-2">
+                                <button id="themeToggle" class="theme-toggle-btn" title="Tema Dəyiş">🌙</button>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </nav>
@@ -161,16 +235,19 @@
 
         body.classList.remove("light-mode", "dark-mode");
         body.classList.add(defaultTheme);
-        toggleBtn.textContent = defaultTheme === 'dark-mode' ? '☀️' : '🌙';
 
-        toggleBtn.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            body.classList.toggle('light-mode');
+        if (toggleBtn) {
+            toggleBtn.textContent = defaultTheme === 'dark-mode' ? '☀️' : '🌙';
 
-            const isDark = body.classList.contains('dark-mode');
-            toggleBtn.textContent = isDark ? '☀️' : '🌙';
-            localStorage.setItem('theme', isDark ? 'dark-mode' : 'light-mode');
-        });
+            toggleBtn.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                body.classList.toggle('light-mode');
+
+                const isDark = body.classList.contains('dark-mode');
+                toggleBtn.textContent = isDark ? '☀️' : '🌙';
+                localStorage.setItem('theme', isDark ? 'dark-mode' : 'light-mode');
+            });
+        }
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)

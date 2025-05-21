@@ -19,8 +19,12 @@
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         border: none;
         border-radius: 1rem;
-        min-height: 220px;
+        min-height: 260px; /* Sabit hündürlük */
+        width: 100%; /* Bootstrap sütununa uyğun genişlik */
         padding: 1.5rem 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
         .card:hover {
@@ -36,7 +40,7 @@
 
     .card-text {
         font-size: 0.95rem;
-        margin-bottom: 1rem;
+        flex-grow: 1; /* Text uzunsa belə düymə aşağıda qalır */
     }
 
     .btn-outline-light {
@@ -50,75 +54,60 @@
         color: inherit;
         margin-bottom: 2rem;
     }
-
-    .summary-box {
-        padding: 1rem;
-        border-radius: 1rem;
-        color: white;
-        font-weight: 600;
-        font-size: 1.1rem;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    
-
-
-
-    {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    }
 </style>
 
 <div class="container py-5">
 
     <h2 class="text-center section-title">💇‍♀️ SalonTrack - Admin Panel</h2>
 
-    <!-- Statistik Kartlar -->
- 
-
-    <!-- Əsas Əməliyyat Kartları -->
     <div class="row g-4 justify-content-center">
         <div class="col-sm-6 col-md-3">
             <div class="card text-white bg-success shadow text-center">
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
                     <h4 class="card-title">📈 Gəlirlər</h4>
                     <p class="card-text">Salon gəlirlərinə bax və əlavə et.</p>
-                    <a href="/Income/Index" class="btn btn-outline-light">Bax</a>
+                    <a href="/Income/Index" class="btn btn-outline-light mt-auto">Bax</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-6 col-md-3">
             <div class="card text-white bg-danger shadow text-center">
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
                     <h4 class="card-title">💸 Xərclər</h4>
                     <p class="card-text">Salonun xərclərini idarə et.</p>
-                    <a href="/Expense/Index" class="btn btn-outline-light">Bax</a>
+                    <a href="/Expense/Index" class="btn btn-outline-light mt-auto">Bax</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-6 col-md-3">
             <div class="card text-white bg-primary shadow text-center">
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
                     <h4 class="card-title">📝 Görülən işlər</h4>
                     <p class="card-text">İşçi tapşırıqlarını izləyin və əlavə edin.</p>
-                    <a href="/ServiceTask/Index" class="btn btn-outline-light">Bax</a>
+                    <a href="/ServiceTask/Index" class="btn btn-outline-light mt-auto">Bax</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-6 col-md-3">
             <div class="card text-white bg-info shadow text-center">
-                <div class="card-body">
+                <div class="card-body d-flex flex-column">
                     <h4 class="card-title">💇‍♀️ Servislər</h4>
                     <p class="card-text">Əlavə et və qiymətlərini təyin et.</p>
-                    <a href="/Service/Index" class="btn btn-outline-light">Bax</a>
+                    <a href="/Service/Index" class="btn btn-outline-light mt-auto">Bax</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- ✅ Yeni: Rol idarəsi üçün Card -->
+        <div class="col-sm-6 col-md-3">
+            <div class="card text-white bg-dark shadow text-center">
+                <div class="card-body d-flex flex-column">
+                    <h4 class="card-title">🛡️ Rol İdarəetməsi</h4>
+                    <p class="card-text">Yeni rol yarat və ya istifadəçi təyin et.</p>
+                    <a href="/Role/Index" class="btn btn-outline-light mt-auto">Bax</a>
                 </div>
             </div>
         </div>

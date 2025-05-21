@@ -1,0 +1,27 @@
+﻿@using Microsoft.AspNetCore.Identity
+@model List<IdentityRole>
+
+<h2>Rollar</h2>
+<a asp-action="CreateRole" class="btn btn-success mb-3">➕ Yeni Rol Əlavə Et</a>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Adı</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td>@role.Name</td>
+                <td>
+                    <form asp-action="DeleteRole" method="post">
+                        <input type="hidden" name="roleName" value="@role.Name" />
+                        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
