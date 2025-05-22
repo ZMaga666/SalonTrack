@@ -16,34 +16,44 @@ namespace SalonTrack.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public IActionResult Index(string? username)
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Login", "Account");
 
-            var incomes = _context.Incomes.ToList();
-            var expenses = _context.Expenses.ToList(); // ✅ xərclər də əlavə olundu
+            var incomes = _context.Incomes.AsQueryable();
+            if (!string.IsNullOrEmpty(username))
+            {
+                incomes = incomes.Where(i => i.Username == username);
+            }
 
+            var expenses = _context.Expenses.ToList();
             var now = DateTime.Now;
             var today = now.Date;
             var thisWeekStart = now.AddDays(-(int)now.DayOfWeek);
             var thisMonthStart = new DateTime(now.Year, now.Month, 1);
             var thisYearStart = new DateTime(now.Year, 1, 1);
 
+            var incomeList = incomes.ToList();
+
             var model = new IncomeListViewModel
             {
-                Incomes = incomes.OrderByDescending(i => i.Date).ToList(),
-                Total = incomes.Sum(i => i.Amount),
-                TotalExpense = expenses.Sum(e => e.Amount), // ✅ burda xərclər toplanır
+                Incomes = incomeList.OrderByDescending(i => i.Date).ToList(),
+                Total = incomeList.Sum(i => i.Amount),
+                TotalExpense = expenses.Sum(e => e.Amount),
 
-                TodayTotal = incomes.Where(i => i.Date.Date == today).Sum(i => i.Amount),
-                ThisWeekTotal = incomes.Where(i => i.Date.Date >= thisWeekStart.Date).Sum(i => i.Amount),
-                ThisMonthTotal = incomes.Where(i => i.Date.Date >= thisMonthStart.Date).Sum(i => i.Amount),
-                ThisYearTotal = incomes.Where(i => i.Date.Date >= thisYearStart.Date).Sum(i => i.Amount)
+                TodayTotal = incomeList.Where(i => i.Date.Date == today).Sum(i => i.Amount),
+                ThisWeekTotal = incomeList.Where(i => i.Date >= thisWeekStart).Sum(i => i.Amount),
+                ThisMonthTotal = incomeList.Where(i => i.Date >= thisMonthStart).Sum(i => i.Amount),
+                ThisYearTotal = incomeList.Where(i => i.Date >= thisYearStart).Sum(i => i.Amount),
+
+                SelectedUsername = username,
+                AllUsernames = _context.Incomes.Select(i => i.Username).Distinct().ToList()
             };
 
             return View(model);
         }
+
 
 
         public IActionResult FilteredList(DateTime? startDate, DateTime? endDate)
@@ -67,15 +77,21 @@ namespace SalonTrack.Controllers
             }
 
             var total = incomes.Sum(i => i.Amount);
+            var incomeList = incomes.ToList();
+
             var model = new IncomeListViewModel
             {
-                Incomes = incomes.OrderByDescending(i => i.Date).ToList(),
+                Incomes = incomeList.OrderByDescending(i => i.Date).ToList(),
                 Total = total,
                 StartDate = startDate,
-                EndDate = endDate
+                EndDate = endDate,
+
+                // ⬇️ Əlavə et:
+                SelectedUsername = null, // bu filterdə yoxdur
+                AllUsernames = _context.Incomes.Select(i => i.Username).Distinct().ToList()
             };
 
-            return View("Index", model); // eyni View istifadə olunur
+            return View("Index", model);
         }
 
         //[HttpGet]

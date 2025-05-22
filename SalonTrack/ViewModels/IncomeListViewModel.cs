@@ -16,5 +16,7 @@ namespace SalonTrack.ViewModels
         public decimal NetTotal => Total - TotalExpense; // ✅ Yekun gəlir
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
+        public string? SelectedUsername { get; set; }
+        public List<string>? AllUsernames { get; set; }
     }
 }

@@ -62,6 +62,7 @@ namespace SalonTrack.Contollers
             
             task.Description = selectedService.Name;
             task.Income.Date = DateTime.Now;
+            task.Income.Username = User.Identity?.Name;
             var income = _context.Incomes.Add(task.Income).Entity;
             _context.SaveChanges();
             task.IncomeId = income.Id;

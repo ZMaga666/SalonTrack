@@ -12,8 +12,8 @@ using SalonTrack.Data;
 namespace SalonTrack.Migrations
 {
     [DbContext(typeof(SalonContext))]
-    [Migration("20250516130200_Initial23")]
-    partial class Initial23
+    [Migration("20250522103759_Migrationn")]
+    partial class Migrationn
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -289,6 +289,9 @@ namespace SalonTrack.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
