@@ -65,12 +65,18 @@
     body.dark-mode strong {
         color: #f1f1f1;
     }
+
+    .highlight-total {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: palegoldenrod;
+    }
 </style>
 
 <div class="row mb-4 text-center">
     <div class="col-md-3">
         <div class="p-3 bg-light shadow rounded">
-            <h6>📅 Bu Gün</h6>
+            <h6>🗕️ Bu Gün</h6>
             <span class="text-success h5">@Model.TodayTotal ₼</span>
         </div>
     </div>
@@ -96,7 +102,7 @@
 
 <div class="alert alert-info mt-3">
     <strong>💰 Yekun Gəlir (Net): </strong>
-    <span class="h5">@Model.NetTotal ₼</span>
+    <span class="highlight-total">@Model.NetTotal ₼</span>
     <span class="text-muted">(Gəlir: @Model.Total ₼ - Xərc: @Model.TotalExpense ₼)</span>
 </div>
 
@@ -106,38 +112,32 @@
     <div class="mb-3 d-flex justify-content-between align-items-end">
         <form asp-action="Index" method="get" class="mb-3 d-flex align-items-center">
             <label class="me-2">İstifadəçiyə görə filter:</label>
-            <select name="username" class="form-select w-auto me-2">
+            <select name="username" class="form-select w-auto me-2" onchange="this.form.submit()">
                 <option value="">Hamısı</option>
                 @foreach (var user in Model.AllUsernames)
                 {
-                    <option value="@user" selected="@(user == Model.SelectedUsername)">
-                        @user
-                    </option>
+                    <option value="@user" selected="@(user == Model.SelectedUsername)">@user</option>
                 }
             </select>
-            <button type="submit" class="btn btn-outline-primary">Filtr et</button>
         </form>
 
         <form asp-action="FilteredList" method="get" class="d-flex gap-2">
             <div>
                 <label>Başlanğıc Tarix</label>
                 <input type="date" name="startDate" class="form-control"
-                       value="@Model?.StartDate?.ToString("yyyy-MM-dd")" />
+                       value="@Model?.StartDate?.ToString("yyyy-MM-dd")" onchange="this.form.submit()" />
             </div>
             <div>
                 <label>Bitmə Tarix</label>
                 <input type="date" name="endDate" class="form-control"
-                       value="@Model?.EndDate?.ToString("yyyy-MM-dd")" />
-            </div>
-            <div class="pt-2">
-                <button type="submit" style="margin:16px 20px 0px 0px; " class="btn btn-primary">🔍 Filter Et</button>
+                       value="@Model?.EndDate?.ToString("yyyy-MM-dd")" onchange="this.form.submit()" />
             </div>
         </form>
     </div>
 
     <div class="mb-3">
         <strong>Ümumi Gəlir:</strong>
-        <span class="text-success h5">@Model.Total ₼</span>
+        <span class="highlight-total">@Model.Total ₼</span>
     </div>
 
     <table class="table table-bordered table-striped shadow">
@@ -145,11 +145,10 @@
             <tr>
                 <th>#</th>
                 <th>İstifadəçi</th>
-
                 <th>Məbləğ (₼)</th>
                 <th>Tarix</th>
                 <th>Əməliyyat</th>
-            </tr> 
+            </tr>
         </thead>
         <tbody>
             @if (Model.Incomes != null && Model.Incomes.Any())
@@ -158,10 +157,8 @@
                 foreach (var item in Model.Incomes)
                 {
                     <tr>
-                        
                         <td>@count</td>
                         <td>@item.Username</td>
-
                         <td>@item.Amount</td>
                         <td>@item.Date.ToString("yyyy-MM-dd")</td>
                         <td>
@@ -175,15 +172,13 @@
             else
             {
                 <tr>
-                    <td colspan="4" class="text-center text-danger">
+                    <td colspan="5" class="text-center text-danger">
                         @if (!string.IsNullOrEmpty(Model.SelectedUsername) || Model.StartDate.HasValue || Model.EndDate.HasValue)
                         {
                             <span>
                                 @if (!string.IsNullOrEmpty(Model.SelectedUsername))
                                 {
                                     <strong>@Model.SelectedUsername</strong>
-                                 
-                                   
                                 }
                                 bu tarix aralığında uyğun gəlir məlumatı tapılmadı.
                             </span>

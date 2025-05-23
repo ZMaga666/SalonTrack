@@ -9,55 +9,6 @@
     <link rel="stylesheet" href="~/SalonTrack.styles.css" asp-append-version="true" />
 
     <style>
-        body.dark-mode .navbar .dropdown-toggle {
-            background-color: #1e1e1e !important;
-            color: #f1f1f1 !important;
-            border-radius: 5px;
-            padding: 6px 10px;
-        }
-
-        body.light-mode .navbar .dropdown-toggle {
-            background-color: #ffffff !important;
-            color: #000000 !important;
-            border-radius: 5px;
-            padding: 6px 10px;
-        }
-
-        body.dark-mode .navbar .dropdown-toggle:hover {
-            background-color: #2a2a2a !important;
-        }
-
-        body.light-mode .navbar .dropdown-toggle:hover {
-            background-color: #f1f1f1 !important;
-        }
-        .logout-btn {
-            border: none;
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        /* Logout düyməsi üçün light və dark mode uyğun dizayn */
-        body.light-mode .logout-btn {
-            background-color: #fff;
-            color: #000;
-        }
-
-        body.dark-mode .logout-btn {
-            background-color: #1e1e1e;
-            color: #fff;
-        }
-
-        body.light-mode .logout-btn:hover {
-            background-color: #f0f0f0;
-        }
-
-        body.dark-mode .logout-btn:hover {
-            background-color: #333;
-        }
-
-
         html {
             transition: background 0.5s, color 0.5s;
         }
@@ -76,49 +27,79 @@
                 color: #f1f1f1;
             }
 
-                body.dark-mode .card,
-                body.dark-mode .form-control,
-                body.dark-mode .table,
-                body.dark-mode input,
-                body.dark-mode select {
-                    background-color: #1e1e1e !important;
-                    color: #f1f1f1 !important;
-                    border-color: #444 !important;
-                }
-
-                    body.dark-mode .table th,
-                    body.dark-mode .table td {
-                        background-color: #1e1e1e !important;
-                        color: #f1f1f1 !important;
-                    }
-
-                body.dark-mode .btn {
-                    color: white !important;
-                }
-
-                body.dark-mode .alert {
-                    background-color: #2a2a2a;
-                    color: #ddd;
-                    border-color: #444;
-                }
-
-                body.dark-mode input[type="date"] {
-                    background-color: #1e1e1e;
-                    color: #f1f1f1;
-                }
-
-        .navbar {
-            transition: background 0.3s;
+        /* Navbar Styling */
+        .navbar .nav-link, .navbar .dropdown-toggle {
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        .light-mode .navbar {
-            background-color: #fff !important;
-            border-bottom: 2px solid #f8c6d8;
+        .navbar .dropdown-menu {
+            font-size: 0.95rem;
+            border-radius: 8px;
+        }
+
+        .navbar .dropdown-item {
+            padding: 10px 16px;
+            transition: background-color 0.2s;
+        }
+
+            .navbar .dropdown-item:hover {
+                background-color: #eee;
+                color: #000;
+            }
+
+        body.dark-mode .navbar .dropdown-item:hover {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .logout-btn {
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        body.light-mode .logout-btn {
+            background-color: #fff;
+            color: #000;
+        }
+
+        body.dark-mode .logout-btn {
+            background-color: #1e1e1e;
+            color: #fff;
+        }
+
+        body.light-mode .logout-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        body.dark-mode .logout-btn:hover {
+            background-color: #333;
+        }
+
+        body.dark-mode .card,
+        body.dark-mode .form-control,
+        body.dark-mode .table,
+        body.dark-mode input,
+        body.dark-mode select {
+            background-color: #1e1e1e !important;
+            color: #f1f1f1 !important;
+            border-color: #444 !important;
         }
 
         .dark-mode .navbar {
             background-color: #1f1f1f !important;
             border-bottom: 1px solid #444;
+        }
+
+        .light-mode .navbar {
+            background-color: #fff !important;
+            border-bottom: 2px solid #f8c6d8;
         }
 
         .navbar-brand {
@@ -150,11 +131,11 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.5s;
         }
 
             .theme-toggle-btn:hover {
-                transform: scale(1.2);
+                transform: scale(1.5);
             }
     </style>
 </head>
@@ -187,7 +168,7 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" backgr >
+                                <a class="nav-link dropdown-toggle fw-bold text-primary-emphasis" href="#" role="button" data-bs-toggle="dropdown">
                                     👤 @User.Identity.Name
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
