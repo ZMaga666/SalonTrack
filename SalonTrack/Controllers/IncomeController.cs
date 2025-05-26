@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SalonTrack.Data;
 using SalonTrack.Models;
 using SalonTrack.ViewModels;
+using System;
 using System.Linq;
 
 namespace SalonTrack.Controllers
@@ -16,6 +17,7 @@ namespace SalonTrack.Controllers
         {
             _context = context;
         }
+
         public IActionResult Index(string? username)
         {
             if (!User.Identity.IsAuthenticated)
@@ -54,30 +56,27 @@ namespace SalonTrack.Controllers
             return View(model);
         }
 
-
-
-        public IActionResult FilteredList(DateTime? startDate, DateTime? endDate)
+        public IActionResult FilteredList(DateTime? startDate, DateTime? endDate, string? username)
         {
             var incomes = _context.Incomes.AsQueryable();
 
-            if (startDate.HasValue || endDate.HasValue)
+            if (!string.IsNullOrEmpty(username))
             {
-                if (startDate.HasValue && endDate.HasValue)
-                {
-                    incomes = incomes.Where(i => i.Date.Date >= startDate.Value.Date && i.Date.Date <= endDate.Value.Date);
-                }
-                else if (startDate.HasValue)
-                {
-                    incomes = incomes.Where(i => i.Date.Date >= startDate.Value.Date);
-                }
-                else if (endDate.HasValue)
-                {
-                    incomes = incomes.Where(i => i.Date.Date <= endDate.Value.Date);
-                }
+                incomes = incomes.Where(i => i.Username == username);
             }
 
-            var total = incomes.Sum(i => i.Amount);
+            if (startDate.HasValue)
+            {
+                incomes = incomes.Where(i => i.Date.Date >= startDate.Value.Date);
+            }
+
+            if (endDate.HasValue)
+            {
+                incomes = incomes.Where(i => i.Date.Date <= endDate.Value.Date);
+            }
+
             var incomeList = incomes.ToList();
+            var total = incomeList.Sum(i => i.Amount);
 
             var model = new IncomeListViewModel
             {
@@ -86,32 +85,12 @@ namespace SalonTrack.Controllers
                 StartDate = startDate,
                 EndDate = endDate,
 
-                // ⬇️ Əlavə et:
-                SelectedUsername = null, // bu filterdə yoxdur
+                SelectedUsername = username,
                 AllUsernames = _context.Incomes.Select(i => i.Username).Distinct().ToList()
             };
 
             return View("Index", model);
         }
-
-        //[HttpGet]
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public IActionResult Create(Income income)
-        //{
-        //    if (!ModelState.IsValid)
-        //        return View(income);
-
-        //    income.Date = income.Date.ToLocalTime();
-        //    _context.Incomes.Add(income);
-        //    _context.SaveChanges();
-
-        //    return RedirectToAction("Index");
-        //}
 
         [HttpGet]
         public IActionResult Edit(int id)

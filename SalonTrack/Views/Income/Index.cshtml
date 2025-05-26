@@ -76,7 +76,7 @@
 <div class="row mb-4 text-center">
     <div class="col-md-3">
         <div class="p-3 bg-light shadow rounded">
-            <h6>🗕️ Bu Gün</h6>
+            <h6>📆 Bu Gün</h6>
             <span class="text-success h5">@Model.TodayTotal ₼</span>
         </div>
     </div>
@@ -120,8 +120,8 @@
                 }
             </select>
         </form>
-
         <form asp-action="FilteredList" method="get" class="d-flex gap-2">
+            <input type="hidden" name="username" value="@Model.SelectedUsername" />
             <div>
                 <label>Başlanğıc Tarix</label>
                 <input type="date" name="startDate" class="form-control"

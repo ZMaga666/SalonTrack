@@ -9,6 +9,24 @@
     <link rel="stylesheet" href="~/SalonTrack.styles.css" asp-append-version="true" />
 
     <style>
+
+        body.dark-mode table td,
+        body.dark-mode table th {
+            color: #f1f1f1 !important;
+        }
+
+        /* Zebra sətirlər (table-striped) üçün əlavə rəng */
+        body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #2b2b2b !important;
+            color: #f1f1f1 !important;
+        }
+
+        /* Tablonun başlığı */
+        body.dark-mode .table-dark thead {
+            background-color: #1a1a1a !important;
+            color: #f1f1f1 !important;
+        }
+
         html {
             transition: background 0.5s, color 0.5s;
         }
