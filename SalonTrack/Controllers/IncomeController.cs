@@ -103,14 +103,22 @@ namespace SalonTrack.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Income updated)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(updated); // Əgər forma düzgün doldurulmayıbsa, geri qaytar
+            }
+
             var income = _context.Incomes.FirstOrDefault(i => i.Id == id);
             if (income == null)
                 return NotFound();
 
             income.Amount = updated.Amount;
             income.Date = updated.Date;
+            income.Username = updated.Username; // İstifadəçi dəyişdirilə biləcək
+
             _context.SaveChanges();
 
             return RedirectToAction("Index");

@@ -120,6 +120,7 @@
                 }
             </select>
         </form>
+
         <form asp-action="FilteredList" method="get" class="d-flex gap-2">
             <input type="hidden" name="username" value="@Model.SelectedUsername" />
             <div>
@@ -163,7 +164,7 @@
                         <td>@item.Date.ToString("yyyy-MM-dd")</td>
                         <td>
                             <a href="/Income/Edit/@item.Id" class="btn btn-sm btn-warning">✏️ Dəyiş</a>
-                            <a href="/Income/Delete/@item.Id" class="btn btn-sm btn-danger">❌ Sil</a>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(@item.Id)">❌ Sil</button>
                         </td>
                     </tr>
                     count++;
@@ -193,3 +194,24 @@
         </tbody>
     </table>
 </div>
+
+<!-- SweetAlert2 Script -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmDelete(incomeId) {
+        Swal.fire({
+            title: 'Əminsiniz?',
+            text: "Bu gəlir məlumatı silinəcək!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Bəli, sil',
+            cancelButtonText: 'İmtina'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/Income/Delete/' + incomeId;
+            }
+        });
+    }
+</script>

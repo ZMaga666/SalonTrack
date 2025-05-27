@@ -1,0 +1,45 @@
+﻿@model SalonTrack.Models.Income
+@{
+    ViewData["Title"] = "Gəlir Redaktə Et";
+}
+
+<h2 class="text-center mb-4">✏️ Gəlir Məlumatını Dəyiş</h2>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" />
+
+            <div class="mb-3">
+                <label asp-for="Amount" class="form-label">Məbləğ (₼)</label>
+                <input asp-for="Amount" class="form-control" />
+                <span asp-validation-for="Amount" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Date" class="form-label">Tarix</label>
+                <input asp-for="Date" class="form-control" type="datetime-local"
+                       value="@Model.Date.ToString("yyyy-MM-ddTHH:mm")" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Username" class="form-label">İstifadəçi Adı</label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">💾 Yadda Saxla</button>
+                <a asp-action="Index" class="btn btn-secondary">↩️ Geri</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
