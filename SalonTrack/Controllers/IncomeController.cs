@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SalonTrack.Data;
 using SalonTrack.Models;
 using SalonTrack.ViewModels;
@@ -12,16 +13,20 @@ namespace SalonTrack.Controllers
     public class IncomeController : Controller
     {
         private readonly SalonContext _context;
+        private readonly ILogger<IncomeController> _logger;
 
-        public IncomeController(SalonContext context)
+        public IncomeController(SalonContext context, ILogger<IncomeController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IActionResult Index(string? username)
         {
             if (!User.Identity.IsAuthenticated)
                 return RedirectToAction("Login", "Account");
+
+            _logger.LogInformation("IncomeController.Index çağırıldı. Filter: {Username}", username);
 
             var incomes = _context.Incomes.AsQueryable();
             if (!string.IsNullOrEmpty(username))
@@ -58,6 +63,8 @@ namespace SalonTrack.Controllers
 
         public IActionResult FilteredList(DateTime? startDate, DateTime? endDate, string? username)
         {
+            _logger.LogInformation("IncomeController.FilteredList çağırıldı. Tarixlər: {Start} - {End}, İstifadəçi: {Username}", startDate, endDate, username);
+
             var incomes = _context.Incomes.AsQueryable();
 
             if (!string.IsNullOrEmpty(username))
@@ -84,7 +91,6 @@ namespace SalonTrack.Controllers
                 Total = total,
                 StartDate = startDate,
                 EndDate = endDate,
-
                 SelectedUsername = username,
                 AllUsernames = _context.Incomes.Select(i => i.Username).Distinct().ToList()
             };
@@ -97,8 +103,12 @@ namespace SalonTrack.Controllers
         {
             var income = _context.Incomes.FirstOrDefault(i => i.Id == id);
             if (income == null)
+            {
+                _logger.LogWarning("IncomeController.Edit GET - gəlir tapılmadı. ID: {Id}", id);
                 return NotFound();
+            }
 
+            _logger.LogInformation("IncomeController.Edit GET - ID: {Id}", id);
             return View(income);
         }
 
@@ -108,18 +118,25 @@ namespace SalonTrack.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(updated); // Əgər forma düzgün doldurulmayıbsa, geri qaytar
+                _logger.LogWarning("IncomeController.Edit POST - model valid deyil. ID: {Id}", id);
+                return View(updated);
             }
 
             var income = _context.Incomes.FirstOrDefault(i => i.Id == id);
             if (income == null)
+            {
+                _logger.LogWarning("IncomeController.Edit POST - gəlir tapılmadı. ID: {Id}", id);
                 return NotFound();
+            }
 
             income.Amount = updated.Amount;
             income.Date = updated.Date;
-            income.Username = updated.Username; // İstifadəçi dəyişdirilə biləcək
+            income.Username = updated.Username;
 
             _context.SaveChanges();
+
+            _logger.LogInformation("IncomeController.Edit - gəlir yeniləndi. ID: {Id}", id);
+            TempData["Success"] = "Gəlir uğurla yeniləndi.";
 
             return RedirectToAction("Index");
         }
@@ -129,11 +146,15 @@ namespace SalonTrack.Controllers
         {
             var income = _context.Incomes.FirstOrDefault(i => i.Id == id);
             if (income == null)
+            {
+                _logger.LogWarning("IncomeController.Delete - gəlir tapılmadı. ID: {Id}", id);
                 return NotFound();
+            }
 
             _context.Incomes.Remove(income);
             _context.SaveChanges();
 
+            _logger.LogInformation("IncomeController.Delete - gəlir silindi. ID: {Id}", id);
             return RedirectToAction("Index");
         }
     }

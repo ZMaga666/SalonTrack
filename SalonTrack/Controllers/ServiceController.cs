@@ -11,16 +11,19 @@ namespace SalonTrack.Controllers
     public class ServiceController : Controller
     {
         private readonly SalonContext _context;
+        private readonly ILogger<ServiceController> _logger;
 
-        public ServiceController(SalonContext context)
+        public ServiceController(SalonContext context, ILogger<ServiceController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public IActionResult Index()
         {
             var services = _context.Services.ToList();
             return View(services);
+            _logger.LogInformation("ServiceController.Servisler cagirildi");
         }
 
         [HttpGet]
