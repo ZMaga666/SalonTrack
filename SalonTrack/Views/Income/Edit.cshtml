@@ -26,9 +26,12 @@
 
             <div class="mb-3">
                 <label asp-for="Username" class="form-label">İstifadəçi Adı</label>
-                <input asp-for="Username" class="form-control" />
+                <select asp-for="Username" class="form-select" asp-items="ViewBag.UserList">
+                    <option value="">Seçin...</option>
+                </select>
                 <span asp-validation-for="Username" class="text-danger"></span>
             </div>
+
 
             <div class="text-end">
                 <button type="submit" class="btn btn-primary">💾 Yadda Saxla</button>

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SalonTrack.Models
 {
@@ -13,8 +14,12 @@ namespace SalonTrack.Models
         [Required(ErrorMessage = "Tarix tələb olunur.")]
         public DateTime Date { get; set; }
 
-      //  [Required(ErrorMessage = "İstifadəçi adı tələb olunur.")]
         public string? Username { get; set; }
-    }
 
+        // 👇 Əlavə olunur
+        public string? UserId { get; set; }
+
+        [ForeignKey("UserId")]
+        public ApplicationUser? User { get; set; }
+    }
 }

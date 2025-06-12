@@ -167,11 +167,20 @@ namespace SalonTrack.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<bool>("LockoutEnabled")
@@ -287,10 +296,15 @@ namespace SalonTrack.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Incomes");
                 });
@@ -320,6 +334,9 @@ namespace SalonTrack.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -330,14 +347,22 @@ namespace SalonTrack.Migrations
                     b.Property<bool>("IsCredit")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int?>("ServiceId")
                         .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("IncomeId");
 
                     b.HasIndex("ServiceId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("ServiceTasks");
                 });
@@ -393,6 +418,15 @@ namespace SalonTrack.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SalonTrack.Models.Income", b =>
+                {
+                    b.HasOne("SalonTrack.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("SalonTrack.Models.ServiceTask", b =>
                 {
                     b.HasOne("SalonTrack.Models.Income", "Income")
@@ -404,9 +438,15 @@ namespace SalonTrack.Migrations
                         .WithMany()
                         .HasForeignKey("ServiceId");
 
+                    b.HasOne("SalonTrack.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Income");
 
                     b.Navigation("Service");
+
+                    b.Navigation("User");
                 });
 #pragma warning restore 612, 618
         }

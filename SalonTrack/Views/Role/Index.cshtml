@@ -1,13 +1,34 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @model List<IdentityRole>
 
-<h2>Rollar</h2>
-<a asp-action="CreateRole" class="btn btn-success mb-3">➕ Yeni Rol Əlavə Et</a>
-<table class="table">
+@{
+    ViewData["Title"] = "Rol Siyahısı";
+}
+
+<h2 class="mb-4">📋 Rol Siyahısı</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Warning"] != null)
+{
+    <div class="alert alert-warning">@TempData["Warning"]</div>
+}
+
+<div class="mb-3">
+    <a asp-action="CreateRole" class="btn btn-success">➕ Yeni Rol Əlavə Et</a>
+    <a asp-controller="User" asp-action="Create" class="btn btn-primary ms-2">👤 Yeni İstifadəçi Əlavə Et</a>
+</div>
+<table class="table table-bordered">
     <thead>
         <tr>
-            <th>Adı</th>
-            <th></th>
+            <th>Rol Adı</th>
+            <th>Əməliyyat</th>
         </tr>
     </thead>
     <tbody>
@@ -16,12 +37,40 @@
             <tr>
                 <td>@role.Name</td>
                 <td>
-                    <form asp-action="DeleteRole" method="post">
-                        <input type="hidden" name="roleName" value="@role.Name" />
-                        <button type="submit" class="btn btn-danger btn-sm">Sil</button>
-                    </form>
+                    <button class="btn btn-danger btn-sm"
+                            onclick="confirmDelete('@role.Name')">
+                        Sil
+                    </button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<form id="deleteForm" method="post" asp-action="DeleteRole">
+    <input type="hidden" id="roleNameInput" name="roleName" />
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmDelete(roleName) {
+        Swal.fire({
+            title: `Rolu silmək istəyirsiniz?`,
+            text: `'${roleName}' rolu silinəcək və istifadəçilər bloklanacaq.`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Bəli, sil!',
+            cancelButtonText: 'İmtina'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById("roleNameInput").value = roleName;
+                document.getElementById("deleteForm").submit();
+            }
+        });
+    }
+</script>
+
+
+

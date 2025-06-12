@@ -1,6 +1,6 @@
 ﻿@using SalonTrack.Models
-
 @model List<ServiceTask>
+
 @{
     ViewData["Title"] = "Görülən İşlər";
 }
@@ -11,8 +11,9 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>İşçi</th>
             <th>Tarix</th>
-            <th>Təsvir</th>
+            <th>Xidmət</th>
             <th>Qiymət</th>
             <th>Ödəniş Tipi</th>
             <th></th>
@@ -22,12 +23,13 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Income.Date.ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@item.User?.UserName</td>
+                <td>@item.Date.ToString("dd.MM.yyyy HH:mm")</td>
                 <td>@item.Description</td>
-                <td>@item.Income.Amount.ToString("0.00") ₼</td>
+                <td>@item.Price.ToString("0.00") ₼</td>
                 <td>@(item.IsCredit ? "Nisyə" : "Nağd")</td>
                 <td>
-                    <form asp-action="Delete" method="post">
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('Bu işi silmək istədiyinizə əminsiniz?');">
                         <input type="hidden" name="id" value="@item.Id" />
                         <button type="submit" class="btn btn-danger btn-sm">Sil</button>
                     </form>
@@ -36,4 +38,3 @@
         }
     </tbody>
 </table>
-

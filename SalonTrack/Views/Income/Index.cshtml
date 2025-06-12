@@ -112,17 +112,19 @@
     <div class="mb-3 d-flex justify-content-between align-items-end">
         <form asp-action="Index" method="get" class="mb-3 d-flex align-items-center">
             <label class="me-2">İstifadəçiyə görə filter:</label>
-            <select name="username" class="form-select w-auto me-2" onchange="this.form.submit()">
+            <select name="userId" class="form-select w-auto me-2" onchange="this.form.submit()">
                 <option value="">Hamısı</option>
-                @foreach (var user in Model.AllUsernames)
+                @foreach (var user in Model.AllUsers)
                 {
-                    <option value="@user" selected="@(user == Model.SelectedUsername)">@user</option>
+                    <option value="@user.Id" selected="@(user.Id == Model.SelectedUserId)">
+                        @user.UserName
+                    </option>
                 }
             </select>
         </form>
 
         <form asp-action="FilteredList" method="get" class="d-flex gap-2">
-            <input type="hidden" name="username" value="@Model.SelectedUsername" />
+            <input type="hidden" name="username" value="@Model.SelectedUserId" />
             <div>
                 <label>Başlanğıc Tarix</label>
                 <input type="date" name="startDate" class="form-control"
@@ -145,7 +147,7 @@
         <thead class="table-dark">
             <tr>
                 <th>#</th>
-                <th>İstifadəçi</th>
+                <th>İşçi</th>
                 <th>Məbləğ (₼)</th>
                 <th>Tarix</th>
                 <th>Əməliyyat</th>
@@ -159,7 +161,8 @@
                 {
                     <tr>
                         <td>@count</td>
-                        <td>@item.Username</td>
+                        <td>@item.User?.UserName</td>
+
                         <td>@item.Amount</td>
                         <td>@item.Date.ToString("yyyy-MM-dd")</td>
                         <td>
@@ -174,12 +177,12 @@
             {
                 <tr>
                     <td colspan="5" class="text-center text-danger">
-                        @if (!string.IsNullOrEmpty(Model.SelectedUsername) || Model.StartDate.HasValue || Model.EndDate.HasValue)
+                        @if (!string.IsNullOrEmpty(Model.SelectedUserId) || Model.StartDate.HasValue || Model.EndDate.HasValue)
                         {
                             <span>
-                                @if (!string.IsNullOrEmpty(Model.SelectedUsername))
+                                @if (!string.IsNullOrEmpty(Model.SelectedUserId))
                                 {
-                                    <strong>@Model.SelectedUsername</strong>
+                                    <strong>@Model.SelectedUserId</strong>
                                 }
                                 bu tarix aralığında uyğun gəlir məlumatı tapılmadı.
                             </span>

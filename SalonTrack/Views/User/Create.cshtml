@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Yeni İstifadəçi Yarat";
+}
+
+<h2 class="mb-4 text-center">👤 Yeni İstifadəçi Yarat</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger text-center">
+        @TempData["Error"]
+    </div>
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["Success"]
+    </div>
+}
+
+<form asp-action="Create" method="post" class="row justify-content-center">
+    <div class="col-md-6">
+
+        <div class="mb-3">
+            <label for="username" class="form-label">İstifadəçi Adı</label>
+            <input type="text" class="form-control" name="username" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Şifrə</label>
+            <input type="password" class="form-control" name="password" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="role" class="form-label">Rol</label>
+            <select class="form-select" name="role" asp-items="ViewBag.Roles" required>
+                <option value="">-- Rol seçin --</option>
+            </select>
+        </div>
+
+        <div class="text-end">
+            <button type="submit" class="btn btn-success">➕ Yarat</button>
+            <a asp-action="Index" class="btn btn-secondary">↩️ Geri</a>
+        </div>
+
+    </div>
+</form>

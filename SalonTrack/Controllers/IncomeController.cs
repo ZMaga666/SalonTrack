@@ -1,11 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SalonTrack.Data;
 using SalonTrack.Models;
 using SalonTrack.ViewModels;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace SalonTrack.Controllers
 {
@@ -14,32 +18,30 @@ namespace SalonTrack.Controllers
     {
         private readonly SalonContext _context;
         private readonly ILogger<IncomeController> _logger;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public IncomeController(SalonContext context, ILogger<IncomeController> logger)
+        public IncomeController(SalonContext context, ILogger<IncomeController> logger, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _logger = logger;
+            _userManager = userManager;
         }
 
-        public IActionResult Index(string? username)
+        public IActionResult Index(string? userId)
         {
-            if (!User.Identity.IsAuthenticated)
-                return RedirectToAction("Login", "Account");
+            var incomes = _context.Incomes.Include(i => i.User).AsQueryable();
 
-            _logger.LogInformation("IncomeController.Index çağırıldı. Filter: {Username}", username);
-
-            var incomes = _context.Incomes.AsQueryable();
-            if (!string.IsNullOrEmpty(username))
+            if (!string.IsNullOrEmpty(userId))
             {
-                incomes = incomes.Where(i => i.Username == username);
+                incomes = incomes.Where(i => i.UserId == userId);
             }
 
             var expenses = _context.Expenses.ToList();
             var now = DateTime.Now;
             var today = now.Date;
-            var thisWeekStart = now.AddDays(-(int)now.DayOfWeek);
-            var thisMonthStart = new DateTime(now.Year, now.Month, 1);
-            var thisYearStart = new DateTime(now.Year, 1, 1);
+            var weekStart = now.AddDays(-(int)now.DayOfWeek);
+            var monthStart = new DateTime(now.Year, now.Month, 1);
+            var yearStart = new DateTime(now.Year, 1, 1);
 
             var incomeList = incomes.ToList();
 
@@ -50,37 +52,71 @@ namespace SalonTrack.Controllers
                 TotalExpense = expenses.Sum(e => e.Amount),
 
                 TodayTotal = incomeList.Where(i => i.Date.Date == today).Sum(i => i.Amount),
-                ThisWeekTotal = incomeList.Where(i => i.Date >= thisWeekStart).Sum(i => i.Amount),
-                ThisMonthTotal = incomeList.Where(i => i.Date >= thisMonthStart).Sum(i => i.Amount),
-                ThisYearTotal = incomeList.Where(i => i.Date >= thisYearStart).Sum(i => i.Amount),
+                ThisWeekTotal = incomeList.Where(i => i.Date >= weekStart).Sum(i => i.Amount),
+                ThisMonthTotal = incomeList.Where(i => i.Date >= monthStart).Sum(i => i.Amount),
+                ThisYearTotal = incomeList.Where(i => i.Date >= yearStart).Sum(i => i.Amount),
 
-                SelectedUsername = username,
-                AllUsernames = _context.Incomes.Select(i => i.Username).Distinct().ToList()
+                SelectedUserId = userId,
+                AllUsers = _userManager.Users.Where(u => !u.IsDeleted).ToList()
             };
 
             return View(model);
         }
+        //public IActionResult FilteredList(DateTime? startDate, DateTime? endDate, string? username)
+        //{
+        //    _logger.LogInformation("IncomeController.FilteredList çağırıldı. Tarixlər: {Start} - {End}, İstifadəçi: {Username}", startDate, endDate, username);
 
-        public IActionResult FilteredList(DateTime? startDate, DateTime? endDate, string? username)
+        //    var incomes = _context.Incomes.Include(i => i.User).AsQueryable();
+
+        //    if (!string.IsNullOrEmpty(username))
+        //    {
+        //        incomes = incomes.Where(i => i.Username == username);
+        //    }
+
+        //    if (startDate.HasValue)
+        //    {
+        //        incomes = incomes.Where(i => i.Date.Date >= startDate.Value.Date);
+        //    }
+
+        //    if (endDate.HasValue)
+        //    {
+        //        incomes = incomes.Where(i => i.Date.Date <= endDate.Value.Date);
+        //    }
+
+        //    var incomeList = incomes.ToList();
+        //    var total = incomeList.Sum(i => i.Amount);
+
+        //    var model = new IncomeListViewModel
+        //    {
+        //        Incomes = incomeList.OrderByDescending(i => i.Date).ToList(),
+        //        Total = total,
+        //        StartDate = startDate,
+        //        EndDate = endDate,
+        //        SelectedUsername = username,
+        //        AllUsernames = _context.Users
+        //            .Where(u => !u.IsDeleted)
+        //            .Select(u => u.UserName)
+        //            .Distinct()
+        //            .ToList()
+        //    };
+
+        //    return View("Index", model);
+        //        }
+
+        public IActionResult FilteredList(DateTime? startDate, DateTime? endDate, string? userId)
         {
-            _logger.LogInformation("IncomeController.FilteredList çağırıldı. Tarixlər: {Start} - {End}, İstifadəçi: {Username}", startDate, endDate, username);
+            var incomes = _context.Incomes.Include(i => i.User).AsQueryable();
 
-            var incomes = _context.Incomes.AsQueryable();
-
-            if (!string.IsNullOrEmpty(username))
+            if (!string.IsNullOrEmpty(userId))
             {
-                incomes = incomes.Where(i => i.Username == username);
+                incomes = incomes.Where(i => i.UserId == userId);
             }
 
             if (startDate.HasValue)
-            {
-                incomes = incomes.Where(i => i.Date.Date >= startDate.Value.Date);
-            }
+                incomes = incomes.Where(i => i.Date >= startDate);
 
             if (endDate.HasValue)
-            {
-                incomes = incomes.Where(i => i.Date.Date <= endDate.Value.Date);
-            }
+                incomes = incomes.Where(i => i.Date <= endDate);
 
             var incomeList = incomes.ToList();
             var total = incomeList.Sum(i => i.Amount);
@@ -91,8 +127,8 @@ namespace SalonTrack.Controllers
                 Total = total,
                 StartDate = startDate,
                 EndDate = endDate,
-                SelectedUsername = username,
-                AllUsernames = _context.Incomes.Select(i => i.Username).Distinct().ToList()
+                SelectedUserId = userId,
+                AllUsers = _userManager.Users.Where(u => !u.IsDeleted).ToList()
             };
 
             return View("Index", model);
@@ -101,20 +137,27 @@ namespace SalonTrack.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var income = _context.Incomes.FirstOrDefault(i => i.Id == id);
+            var income = _context.Incomes.Include(i => i.User).FirstOrDefault(i => i.Id == id);
             if (income == null)
             {
                 _logger.LogWarning("IncomeController.Edit GET - gəlir tapılmadı. ID: {Id}", id);
                 return NotFound();
             }
 
-            _logger.LogInformation("IncomeController.Edit GET - ID: {Id}", id);
+            ViewBag.UserList = _userManager.Users
+                .Where(u => !u.IsDeleted)
+                .Select(u => new SelectListItem
+                {
+                    Value = u.UserName,
+                    Text = u.UserName
+                }).ToList();
+
             return View(income);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Income updated)
+        public async Task<IActionResult> Edit(int id, Income updated)
         {
             if (!ModelState.IsValid)
             {
@@ -132,6 +175,15 @@ namespace SalonTrack.Controllers
             income.Amount = updated.Amount;
             income.Date = updated.Date;
             income.Username = updated.Username;
+
+            if (!string.IsNullOrEmpty(updated.Username))
+            {
+                var user = await _userManager.FindByNameAsync(updated.Username);
+                if (user != null)
+                {
+                    income.UserId = user.Id;
+                }
+            }
 
             _context.SaveChanges();
 

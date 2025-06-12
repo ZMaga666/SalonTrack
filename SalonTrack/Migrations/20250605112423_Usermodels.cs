@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SalonTrack.Migrations
 {
     /// <inheritdoc />
-    public partial class Migrationn : Migration
+    public partial class Usermodels : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,9 @@ namespace SalonTrack.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -80,21 +83,6 @@ namespace SalonTrack.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Expenses", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Incomes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Incomes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -217,19 +205,48 @@ namespace SalonTrack.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Incomes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Incomes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Incomes_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ServiceTasks",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     IsCredit = table.Column<bool>(type: "bit", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     ServiceId = table.Column<int>(type: "int", nullable: true),
                     IncomeId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ServiceTasks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ServiceTasks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ServiceTasks_Incomes_IncomeId",
                         column: x => x.IncomeId,
@@ -283,6 +300,11 @@ namespace SalonTrack.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Incomes_UserId",
+                table: "Incomes",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ServiceTasks_IncomeId",
                 table: "ServiceTasks",
                 column: "IncomeId");
@@ -291,6 +313,11 @@ namespace SalonTrack.Migrations
                 name: "IX_ServiceTasks_ServiceId",
                 table: "ServiceTasks",
                 column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ServiceTasks_UserId",
+                table: "ServiceTasks",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -324,13 +351,13 @@ namespace SalonTrack.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Incomes");
 
             migrationBuilder.DropTable(
                 name: "Services");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

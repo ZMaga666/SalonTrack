@@ -28,7 +28,7 @@ namespace SalonTrack.Controllers
             if (user == null)
             {
                 ViewBag.Error = "İstifadəçi tapılmadı.";
-                return View();
+                return View(); // Login səhifəsinə qayıdır
             }
 
             var result = await _signInManager.PasswordSignInAsync(user, password, isPersistent: false, lockoutOnFailure: false);
@@ -40,14 +40,18 @@ namespace SalonTrack.Controllers
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            // Rol əsaslı yönləndirmə
             if (roles.Contains("Admin"))
                 return RedirectToAction("Index", "Dashboard");
-            else if (roles.Contains("Moderator"))
+
+            if (roles.Contains("Moderator"))
                 return RedirectToAction("Index", "ServiceTask");
 
-            return RedirectToAction("Login");
+            // Əgər rol uyğunluğu yoxdursa — giriş olsa belə, çıxış etdir və xəbərdarlıq et
+            await _signInManager.SignOutAsync();
+            ViewBag.Error = "Sizə uyğun bir rol tapılmadı.";
+            return View();
         }
+
 
         public async Task<IActionResult> Logout()
         {

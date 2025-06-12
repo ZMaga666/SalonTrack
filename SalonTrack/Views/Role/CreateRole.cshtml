@@ -1,13 +1,29 @@
 ﻿@{
     ViewData["Title"] = "Yeni Rol Yarat";
 }
-<h2>Yeni Rol Yarat</h2>
+
+<h2 class="mb-4">Yeni Rol Yarat</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+@if (TempData["Warning"] != null)
+{
+    <div class="alert alert-warning">@TempData["Warning"]</div>
+}
 
 <form asp-action="CreateRole" method="post" class="mt-4">
     <div class="mb-3">
         <label for="roleName" class="form-label">Rol adı</label>
         <input type="text" name="roleName" id="roleName" class="form-control" required />
     </div>
-    <button type="submit" class="btn btn-success">Yarat</button>
-    <a asp-action="Index" class="btn btn-secondary ms-2">Geri</a>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success">Yarat</button>
+        <a asp-action="Index" class="btn btn-secondary">Geri</a>
+    </div>
 </form>
