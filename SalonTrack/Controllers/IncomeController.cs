@@ -62,47 +62,7 @@ namespace SalonTrack.Controllers
 
             return View(model);
         }
-        //public IActionResult FilteredList(DateTime? startDate, DateTime? endDate, string? username)
-        //{
-        //    _logger.LogInformation("IncomeController.FilteredList çağırıldı. Tarixlər: {Start} - {End}, İstifadəçi: {Username}", startDate, endDate, username);
-
-        //    var incomes = _context.Incomes.Include(i => i.User).AsQueryable();
-
-        //    if (!string.IsNullOrEmpty(username))
-        //    {
-        //        incomes = incomes.Where(i => i.Username == username);
-        //    }
-
-        //    if (startDate.HasValue)
-        //    {
-        //        incomes = incomes.Where(i => i.Date.Date >= startDate.Value.Date);
-        //    }
-
-        //    if (endDate.HasValue)
-        //    {
-        //        incomes = incomes.Where(i => i.Date.Date <= endDate.Value.Date);
-        //    }
-
-        //    var incomeList = incomes.ToList();
-        //    var total = incomeList.Sum(i => i.Amount);
-
-        //    var model = new IncomeListViewModel
-        //    {
-        //        Incomes = incomeList.OrderByDescending(i => i.Date).ToList(),
-        //        Total = total,
-        //        StartDate = startDate,
-        //        EndDate = endDate,
-        //        SelectedUsername = username,
-        //        AllUsernames = _context.Users
-        //            .Where(u => !u.IsDeleted)
-        //            .Select(u => u.UserName)
-        //            .Distinct()
-        //            .ToList()
-        //    };
-
-        //    return View("Index", model);
-        //        }
-
+       
         public IActionResult FilteredList(DateTime? startDate, DateTime? endDate, string? userId)
         {
             var incomes = _context.Incomes.Include(i => i.User).AsQueryable();

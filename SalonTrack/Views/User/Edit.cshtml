@@ -1,0 +1,39 @@
+﻿@model SalonTrack.ViewModels.UserEditViewModel
+
+@{
+    ViewData["Title"] = "İstifadəçini Redaktə Et";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">✏️ İstifadəçini Redaktə Et</h2>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label asp-for="UserName" class="form-label"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Role" class="form-label">Rol</label>
+            <select asp-for="Role" class="form-select" asp-items="ViewBag.Roles"></select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" asp-for="IsDeleted" />
+            <label class="form-check-label" asp-for="IsDeleted">
+                Deaktiv et (İstifadəçini deaktivləşdir)
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-success">💾 Yadda saxla</button>
+        <a asp-action="Index" class="btn btn-secondary">⬅️ Geri</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

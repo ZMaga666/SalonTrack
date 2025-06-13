@@ -8,164 +8,17 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/SalonTrack.styles.css" asp-append-version="true" />
 
-    <style>
-
-        body.dark-mode table td,
-        body.dark-mode table th {
-            color: #f1f1f1 !important;
-        }
-
-        /* Zebra sətirlər (table-striped) üçün əlavə rəng */
-        body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
-            background-color: #2b2b2b !important;
-            color: #f1f1f1 !important;
-        }
-
-        /* Tablonun başlığı */
-        body.dark-mode .table-dark thead {
-            background-color: #1a1a1a !important;
-            color: #f1f1f1 !important;
-        }
-
-        html {
-            transition: background 0.5s, color 0.5s;
-        }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-            body.light-mode {
-                background: linear-gradient(to right, #f8e1f4, #e1f0ff);
-                color: #222;
-            }
-
-            body.dark-mode {
-                background: linear-gradient(to right, #1a1a, #16213e);
-                color: #f1f1f1;
-            }
-
-        /* Navbar Styling */
-        .navbar .nav-link, .navbar .dropdown-toggle {
-            font-size: 1.1rem;
-            font-weight: 600;
-            padding: 8px 14px;
-            border-radius: 8px;
-            transition: background-color 0.3s, color 0.3s;
-        }
-
-        .navbar .dropdown-menu {
-            font-size: 0.95rem;
-            border-radius: 8px;
-        }
-
-        .navbar .dropdown-item {
-            padding: 10px 16px;
-            transition: background-color 0.2s;
-        }
-
-            .navbar .dropdown-item:hover {
-                background-color: #eee;
-                color: #000;
-            }
-
-        body.dark-mode .navbar .dropdown-item:hover {
-            background-color: #333;
-            color: #fff;
-        }
-
-        .logout-btn {
-            border: none;
-            padding: 5px 12px;
-            border-radius: 4px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        body.light-mode .logout-btn {
-            background-color: #fff;
-            color: #000;
-        }
-
-        body.dark-mode .logout-btn {
-            background-color: #1e1e1e;
-            color: #fff;
-        }
-
-        body.light-mode .logout-btn:hover {
-            background-color: #f0f0f0;
-        }
-
-        body.dark-mode .logout-btn:hover {
-            background-color: #333;
-        }
-
-        body.dark-mode .card,
-        body.dark-mode .form-control,
-        body.dark-mode .table,
-        body.dark-mode input,
-        body.dark-mode select {
-            background-color: #1e1e1e !important;
-            color: #f1f1f1 !important;
-            border-color: #444 !important;
-        }
-
-        .dark-mode .navbar {
-            background-color: #1f1f1f !important;
-            border-bottom: 1px solid #444;
-        }
-
-        .light-mode .navbar {
-            background-color: #fff !important;
-            border-bottom: 2px solid #f8c6d8;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.6rem;
-            color: #e91e63 !important;
-        }
-
-        .nav-link {
-            color: inherit !important;
-        }
-
-        .footer {
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .light-mode .footer {
-            background-color: #ffeef5;
-            color: #666;
-        }
-
-        .dark-mode .footer {
-            background-color: #1a1a1a;
-            color: #aaa;
-        }
-
-        .theme-toggle-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: transform 0.5s;
-        }
-
-            .theme-toggle-btn:hover {
-                transform: scale(1.5);
-            }
-    </style>
+    
 </head>
 <body class="light-mode">
     <header>
-        <nav class="navbar navbar-expand-sm">
+        <nav class="navbar navbar-expand-md navbar-light">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-controller="Dashboard" asp-action="Index">💅 SalonTrack</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end align-items-center">
+                <div class="collapse navbar-collapse d-md-flex justify-content-end align-items-center" id="mainNavbar">
                     <ul class="navbar-nav">
                         @if (User.IsInRole("Admin"))
                         {
@@ -227,12 +80,11 @@
     <script>
         const body = document.body;
         const toggleBtn = document.getElementById('themeToggle');
-
-        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const savedTheme = localStorage.getItem('theme');
         const defaultTheme = savedTheme || (prefersDark ? 'dark-mode' : 'light-mode');
 
-        body.classList.remove("light-mode", "dark-mode");
+        body.classList.remove('light-mode', 'dark-mode');
         body.classList.add(defaultTheme);
 
         if (toggleBtn) {
@@ -241,7 +93,6 @@
             toggleBtn.addEventListener('click', () => {
                 body.classList.toggle('dark-mode');
                 body.classList.toggle('light-mode');
-
                 const isDark = body.classList.contains('dark-mode');
                 toggleBtn.textContent = isDark ? '☀️' : '🌙';
                 localStorage.setItem('theme', isDark ? 'dark-mode' : 'light-mode');

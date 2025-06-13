@@ -1,90 +1,13 @@
-﻿ @{
-  ViewData["Title"] = "SalonTrack Admin Panel";
+﻿@{
+    ViewData["Title"] = "SalonTrack Admin Panel";
 }
 
-<style>
-    body {
-        font-family: 'Segoe UI', sans-serif;
-    }
-
-        body.light-mode {
-            background: linear-gradient(to right, #f8e1f4, #e1f0ff);
-        }
-
-        body.dark-mode {
-            background-color: #121212;
-        }
-
-    .card {
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border: none;
-        border-radius: 1rem;
-        min-height: 260px; /* Sabit hündürlük */
-        width: 100%; /* Bootstrap sütununa uyğun genişlik */
-        padding: 1.5rem 1rem;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-
-        .card:hover { 
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-        
-    .card-title {
-        font-weight: bold;
-        font-size: 1.4rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .card-text {
-        font-size: 1.65rem;
-        flex-grow: 1; /* Text uzunsa belə düymə aşağıda qalır */
-    }
-
-    .btn-outline-light {
-        font-weight: 600;
-        border-width: 2px;
-    }
-    ./* btn-outline-dark{
-        font-weight 600;
-        border-width:2px;
-        background-origin:bold
-    } */
-    .section-title {
-        font-size: 2rem;
-        font-weight: 600;
-        color: inherit;
-        margin-bottom: 2rem;
-    }
-
-    body > header > nav > div > div > ul.navbar-nav.ms-auto.align-items-center > li.nav-item.dropdown > ul{
-        background: #1e1e1e;
-        transition: all 0.3s ease;
-    }
-
-        body > header > nav > div > div > ul.navbar-nav.ms-auto.align-items-center > li.nav-item.dropdown > ul > li > form > button{
-            display: inline-block;
-            width: 100%;
-            height: 100%;
-            padding: 10px;
-        }
-
-    body > header > nav > div > div > ul.navbar-nav.ms-auto.align-items-center > li.nav-item.dropdown > ul{
-        padding: 0;
-        line-height: 0;
-        border: none;
-    }
-</style>
-
 <div class="container py-5">
-
-    <h2 class="text-center section-title">💇‍♀️ Xoş Gəlmisiniz!- Admin Panel</h2>
+    <h2 class="text-center section-title">💇‍♀️ Xoş Gəlmisiniz! - Admin Panel</h2>
 
     <div class="row g-4 justify-content-center">
         <div class="col-sm-6 col-md-3">
-            <div class="card text-white bg-success shadow text-center">
+            <div class="card text-white bg-success shadow text-center h-100">
                 <div class="card-body d-flex flex-column">
                     <h4 class="card-title">📈 Gəlirlər</h4>
                     <p class="card-text">Salon gəlirlərinə bax və əlavə et.</p>
@@ -94,7 +17,7 @@
         </div>
 
         <div class="col-sm-6 col-md-3">
-            <div class="card text-white bg-danger shadow text-center">
+            <div class="card text-white bg-danger shadow text-center h-100">
                 <div class="card-body d-flex flex-column">
                     <h4 class="card-title">💸 Xərclər</h4>
                     <p class="card-text">Salonun xərclərini idarə et.</p>
@@ -104,7 +27,7 @@
         </div>
 
         <div class="col-sm-6 col-md-3">
-            <div class="card text-white bg-primary shadow text-center">
+            <div class="card text-white bg-primary shadow text-center h-100">
                 <div class="card-body d-flex flex-column">
                     <h4 class="card-title">📝 Görülən işlər</h4>
                     <p class="card-text">Tapşırıqları izləyin və əlavə edin.</p>
@@ -114,7 +37,7 @@
         </div>
 
         <div class="col-sm-6 col-md-3">
-            <div class="card text-white bg-info shadow text-center">
+            <div class="card text-white bg-info shadow text-center h-100">
                 <div class="card-body d-flex flex-column">
                     <h4 class="card-title">💇‍♀️ Servislər</h4>
                     <p class="card-text">Yeni servisləri əlavə et.</p>
@@ -123,9 +46,8 @@
             </div>
         </div>
 
-        <!-- ✅ Yeni: Rol idarəsi üçün Card -->
         <div class="col-sm-6 col-md-3">
-            <div class="card text-white bg-dark shadow text-center">
+            <div class="card text-white bg-dark shadow text-center h-100">
                 <div class="card-body d-flex flex-column">
                     <h4 class="card-title">🛡️ Rol İdarəetməsi</h4>
                     <p class="card-text">Yeni rol yarat və ya istifadəçi təyin et.</p>
@@ -133,9 +55,9 @@
                 </div>
             </div>
         </div>
-        <!-- ✅ Yeni: İstifadəçi idarəsi üçün Card -->
+
         <div class="col-sm-6 col-md-3">
-            <div class="card text-white bg-warning shadow text-center">
+            <div class="card text-dark bg-warning shadow text-center h-100">
                 <div class="card-body d-flex flex-column">
                     <h4 class="card-title">👥 İstifadəçilər</h4>
                     <p class="card-text">İstifadəçiləri yarat, gəlirinə bax və sil.</p>
@@ -143,8 +65,5 @@
                 </div>
             </div>
         </div>
-
-        
     </div>
 </div>
-

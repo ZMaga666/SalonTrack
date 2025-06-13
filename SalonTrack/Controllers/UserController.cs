@@ -10,6 +10,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
+namespace SalonTrack.Controllers;
+
 [Authorize(Roles = "Admin")]
 public class UserController : Controller
 {
@@ -29,6 +31,13 @@ public class UserController : Controller
     public async Task<IActionResult> Index(DateTime? startDate, DateTime? endDate, string status = "active")
     {
         var users = await _userManager.Users.ToListAsync();
+
+        users = status switch
+        {
+            "all" => users,
+            "active"=> users.Where(u=>!u.IsDeleted).ToList(),
+            "deactive"=> users.Where(u => u.IsDeleted).ToList()
+        };
 
         var viewModel = new List<UserListViewModel>();
 
@@ -113,7 +122,62 @@ public class UserController : Controller
 
         TempData["Error"] = string.Join(", ", result.Errors.Select(e => e.Description));
         return RedirectToAction("Create");
+
+
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+            return NotFound();
+
+        var roles = await _userManager.GetRolesAsync(user);
+
+        var model = new UserEditViewModel
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            Role = roles.FirstOrDefault() ?? "",
+            IsDeleted = user.IsDeleted
+        };
+
+        ViewBag.Roles = new SelectList(_roleManager.Roles.ToList(), "Name", "Name", model.Role);
+        return View(model);
+    }
+
+
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(UserEditViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Roles = new SelectList(_roleManager.Roles.ToList(), "Name", "Name", model.Role);
+            return View(model);
+        }
+
+        var user = await _userManager.FindByIdAsync(model.Id);
+        if (user == null)
+            return NotFound();
+
+        user.UserName = model.UserName;
+        user.IsDeleted = model.IsDeleted;
+
+        var existingRoles = await _userManager.GetRolesAsync(user);
+        if (existingRoles.Any())
+        {
+            await _userManager.RemoveFromRolesAsync(user, existingRoles);
+        }
+        await _userManager.AddToRoleAsync(user, model.Role);
+
+        await _userManager.UpdateAsync(user);
+
+        TempData["Success"] = "İstifadəçi uğurla yeniləndi.";
+        return RedirectToAction("Index");
+    }
+
     [HttpPost]
     public async Task<IActionResult> Delete(string id)
     {
