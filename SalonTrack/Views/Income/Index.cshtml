@@ -1,11 +1,11 @@
 ﻿@model SalonTrack.ViewModels.IncomeListViewModel
-
 @{
     ViewData["Title"] = "Gəlirlər Siyahısı";
-    string name;
 }
 
 <div class="container py-4">
+
+    <!-- Üst Panel -->
     <div class="row mb-4 text-center">
         <div class="col-md-3 col-sm-6 mb-3">
             <div class="p-3 bg-light shadow rounded">
@@ -39,8 +39,7 @@
         <span class="text-muted ms-2">(Gəlir: @Model.Total ₼ - Xərc: @Model.TotalExpense ₼)</span>
     </div>
 
-    <h2 class="text-center my-4">📈 Gəlir Məlumatları</h2>
-
+    <!-- Filter Form -->
     <div class="row mb-4 g-3">
         <div class="col-md-6">
             <form asp-action="Index" method="get" class="d-flex align-items-end gap-2">
@@ -60,102 +59,66 @@
         </div>
 
         <div class="col-md-6">
-            <form asp-action="FilteredList" method="get" class="d-flex gap-2 align-items-end flex-wrap">
+            <form asp-action="Index" method="get" class="d-flex gap-2 align-items-end flex-wrap">
                 <input type="hidden" name="userId" value="@Model.SelectedUserId" />
                 <div>
                     <label>Başlanğıc Tarix</label>
                     <input type="date" name="startDate" class="form-control"
-                           value="@Model?.StartDate?.ToString("yyyy-MM-dd")" onchange="this.form.submit()" />
+                           value="@Model?.StartDate?.ToString("yyyy-MM-dd")"
+                           onchange="this.form.submit()" />
                 </div>
                 <div>
                     <label>Bitmə Tarix</label>
                     <input type="date" name="endDate" class="form-control"
-                           value="@Model?.EndDate?.ToString("yyyy-MM-dd")" onchange="this.form.submit()" />
+                           value="@Model?.EndDate?.ToString("yyyy-MM-dd")"
+                           onchange="this.form.submit()" />
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="mb-3">
-        <strong>Ümumi Gəlir:</strong>
-        <span class="highlight-total">@Model.Total ₼</span>
-    </div>
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped align-middle shadow">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>İşçi</th>
-                    <th>Məbləğ (₼)</th>
-                    <th>Tarix</th>
-                    <th>Əməliyyat</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Incomes != null && Model.Incomes.Any())
-                {
-                    int count = 1;
-                    foreach (var item in Model.Incomes)
-                    {
-                        <tr>
-                            <td>@count</td>
-                            <td>@item.User?.UserName</td>
-                            <td>@item.Amount</td>
-                            <td>@item.Date.ToString("yyyy-MM-dd")</td>
-                            <td>
-                                <a href="/Income/Edit/@item.Id" class="btn btn-sm btn-warning">✏️ Dəyiş</a>
-                                <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(@item.Id)">❌ Sil</button>
-                            </td>
-                        </tr>
-                        count++;
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="5" class="text-center text-danger">
-                            @if (!string.IsNullOrEmpty(Model.SelectedUserId) || Model.StartDate.HasValue || Model.EndDate.HasValue)
-                            {
-                                <span>
-                                    @if (!string.IsNullOrEmpty(Model.SelectedUserId))
-                                    {
-                                        var user = Model.AllUsers.Where(x => x.Id == Model.SelectedUserId).FirstOrDefault();
-                                        name = user.UserName;
-                                        <strong>@name</strong>
-                                    }
-                                    bu tarix aralığında uyğun gəlir məlumatı tapılmadı.
-                                </span>
-                            }
-                            else
-                            {
-                                <span>Heç bir gəlir qeyd olunmayıb.</span>
-                            }
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+    <!-- Cədvəl -->
+    <div id="incomeTable">
+        @await Html.PartialAsync("_IncomeTablePartial", Model)
     </div>
 </div>
 
-<!-- SweetAlert2 Script -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    function confirmDelete(incomeId) {
-        Swal.fire({
-            title: 'Əminsiniz?',
-            text: "Bu gəlir məlumatı silinəcək!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Bəli, sil',
-            cancelButtonText: 'İmtina'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = '/Income/Delete/' + incomeId;
-            }
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmDelete(incomeId) {
+            Swal.fire({
+                title: 'Əminsiniz?',
+                text: "Bu gəlir məlumatı silinəcək!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Bəli, sil',
+                cancelButtonText: 'İmtina'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '/Income/Delete/' + incomeId;
+                }
+            });
+        }
+
+        // AJAX Pagination
+        $(document).on("click", ".page-link", function (e) {
+            e.preventDefault();
+            const url = $(this).attr("href");
+            $.get(url, function (data) {
+                $("#incomeTable").html(data);
+            });
         });
-    }
-</script>
+
+        // Filter AJAX
+        $("#filterForm").on("submit", function (e) {
+            e.preventDefault();
+            $.get("/Income/Index", $(this).serialize(), function (data) {
+                $("#incomeTable").html(data);
+            });
+        });
+    </script>
+}

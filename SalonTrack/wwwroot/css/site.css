@@ -25,7 +25,7 @@ body {
     }
 
     body.dark-mode {
-        background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+        background: radial-gradient(ellipse at bottom, #260023 0%, #090a0f 100%);
         background-size: cover;
         background-attachment: fixed;
         color: #f1f1f1;
@@ -39,15 +39,11 @@ body {
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('/images/stars.gif');
+            background: url('/images/gray-floral.png');
             opacity: 0.08;
             pointer-events: none;
             z-index: 0;
         }
-.card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
-}
 
 /* Navbar */
 .navbar .nav-link,
@@ -79,16 +75,6 @@ body.dark-mode .navbar .dropdown-item:hover {
     color: #fff;
 }
 
-body.dark-mode .card,
-body.dark-mode .form-control,
-body.dark-mode .table,
-body.dark-mode input,
-body.dark-mode select {
-    background-color: #1e1e1e !important;
-    color: #f1f1f1 !important;
-    border-color: #444 !important;
-}
-
 .light-mode .navbar {
     background-color: #fff !important;
     border-bottom: 2px solid #f8c6d8;
@@ -108,8 +94,21 @@ body.dark-mode select {
 .nav-link {
     color: inherit !important;
 }
+/* Light mode üçün navbar şəffaf */
+body.light-mode .navbar {
+    background-color: rgba(255, 255, 255, 0.75) !important;
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
 
-/* Çıxış düyməsi */
+/* Dark mode üçün navbar şəffaf */
+body.dark-mode .navbar {
+    background-color: rgba(31, 31, 31, 0.5) !important;
+    
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Logout Button */
 .logout-btn {
     border: none;
     padding: 5px 12px;
@@ -118,7 +117,7 @@ body.dark-mode select {
     transition: all 0.3s ease;
 }
 
-body.light-mode .logout-btn {
+/*body.light-mode .logout-btn {
     background-color: #fff;
     color: #000;
 }
@@ -126,7 +125,7 @@ body.light-mode .logout-btn {
 body.dark-mode .logout-btn {
     background-color: #1e1e1e;
     color: #fff;
-}
+}*/
 
 body.light-mode .logout-btn:hover {
     background-color: #f0f0f0;
@@ -138,20 +137,22 @@ body.dark-mode .logout-btn:hover {
 
 /* Footer */
 .footer {
-    transition: background 0.3s, color 0.3s;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(5px);
+    color: #333;
 }
 
 .light-mode .footer {
-    background-color: #ffeef5;
-    color: #666;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(5px);
+    color: #333;
 }
-
 .dark-mode .footer {
-    background-color: #1a1a1a;
-    color: #aaa;
+    background-color: rgba(20, 20, 20, 0.5);
+    color: #ccc;
 }
 
-/* Tema dəyişmə düyməsi */
+/* Theme Toggle Button */
 .theme-toggle-btn {
     background: none;
     border: none;
@@ -164,7 +165,7 @@ body.dark-mode .logout-btn:hover {
         transform: scale(1.5);
     }
 
-/* Focus effektləri */
+/* Focus Effects */
 .btn:focus,
 .btn:active:focus,
 .btn-link.nav-link:focus,
@@ -173,7 +174,7 @@ body.dark-mode .logout-btn:hover {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-/* Mobil görünüş */
+/* Mobile View */
 @media (max-width: 768px) {
     .navbar-nav .nav-link {
         padding: 12px;
@@ -188,6 +189,7 @@ body.dark-mode .logout-btn:hover {
         font-size: 1.3rem;
     }
 }
+
 .section-title {
     font-size: 2rem;
     font-weight: 600;
@@ -195,38 +197,81 @@ body.dark-mode .logout-btn:hover {
     margin-bottom: 2rem;
 }
 
+/* Cards - Completely Transparent but Readable */
 .card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: none;
+    position: relative;
+    z-index: 1;
     border-radius: 1rem;
-    min-height: 260px;
-    padding: 1.5rem 1rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    background-color: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 
-    .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-    }
+body.light-mode .card {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: #000; /* Tünd boz yazı rəngi */
+    background-color: rgba(255, 255, 255, 0.75) !important; /* Ağ şəffaf fon */
+}
+
+body.dark-mode .card {
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #f8f9fa; /* Açıq yazı rəngi */
+    background-color: rgba(30, 30, 30, 0.3) !important; /* Tünd şəffaf fon */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
 
 .card-title {
-    font-weight: bold;
+    font-weight: 700;
     font-size: 1.4rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
 }
 
 .card-text {
-    font-size: 1.65rem;
-    flex-grow: 1;
+    font-size: 1.1rem;
+    line-height: 1.6;
 }
 
+/* Text shadows for better readability */
+body.light-mode .card-title,
+body.light-mode .card-text {
+    color:#000;
+    text-shadow: none;
+}
+body.light-mode.card:hover{
+    background-color:rgba(255,255,255,0.9);
+    box-shadow:0 12px 24px rgba(0,0,0,0.25);
+    border: 1px solid rgba(0,0,0,0.2);
+    transform:translateY(-5px) scale(1.02);
+}
+body.dark-mode .card-title,
+body.dark-mode .card-text {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Buttons */
 .btn-outline-light, .btn-outline-dark {
     font-weight: 600;
     border-width: 2px;
+
 }
-/* Table dark-light uyğunlaşdırması */
+
+
+
+/* Tables */
 body.dark-mode table thead {
     background-color: #2c2c2c;
     color: #fff;
+}
+
+body.light-mode > div > main > div > div > div > div > div > a {
+    border: 1px solid black;
+    color: black;
 }
 
 body.dark-mode .table-striped > tbody > tr:nth-of-type(odd) {
@@ -237,6 +282,7 @@ body.dark-mode .table td,
 body.dark-mode .table th {
     color: #f1f1f1;
 }
+
 .highlight-total {
     font-size: 1.5rem;
     font-weight: bold;
@@ -248,8 +294,19 @@ body.dark-mode .bg-light {
     color: #f1f1f1 !important;
 }
 
+
 body.dark-mode .alert-info {
     background-color: #2a2a2a;
     color: #ddd;
     border-color: #444;
+}
+
+/* Form Elements */
+body.dark-mode .form-control,
+body.dark-mode .table,
+body.dark-mode input,
+body.dark-mode select {
+    background-color: rgba(30, 30, 30, 0.7);
+    color: #f1f1f1;
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }

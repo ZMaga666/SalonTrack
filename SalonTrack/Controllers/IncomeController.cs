@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿// Controller
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,6 +20,7 @@ namespace SalonTrack.Controllers
         private readonly SalonContext _context;
         private readonly ILogger<IncomeController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
+        private const int PageSize = 10;
 
         public IncomeController(SalonContext context, ILogger<IncomeController> logger, UserManager<ApplicationUser> userManager)
         {
@@ -27,50 +29,12 @@ namespace SalonTrack.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index(string? userId)
+        public async Task<IActionResult> Index(string? userId, DateTime? startDate, DateTime? endDate, int page = 1)
         {
             var incomes = _context.Incomes.Include(i => i.User).AsQueryable();
 
             if (!string.IsNullOrEmpty(userId))
-            {
                 incomes = incomes.Where(i => i.UserId == userId);
-            }
-
-            var expenses = _context.Expenses.ToList();
-            var now = DateTime.Now;
-            var today = now.Date;
-            var weekStart = now.AddDays(-(int)now.DayOfWeek);
-            var monthStart = new DateTime(now.Year, now.Month, 1);
-            var yearStart = new DateTime(now.Year, 1, 1);
-
-            var incomeList = incomes.ToList();
-
-            var model = new IncomeListViewModel
-            {
-                Incomes = incomeList.OrderByDescending(i => i.Date).ToList(),
-                Total = incomeList.Sum(i => i.Amount),
-                TotalExpense = expenses.Sum(e => e.Amount),
-
-                TodayTotal = incomeList.Where(i => i.Date.Date == today).Sum(i => i.Amount),
-                ThisWeekTotal = incomeList.Where(i => i.Date >= weekStart).Sum(i => i.Amount),
-                ThisMonthTotal = incomeList.Where(i => i.Date >= monthStart).Sum(i => i.Amount),
-                ThisYearTotal = incomeList.Where(i => i.Date >= yearStart).Sum(i => i.Amount),
-
-                SelectedUserId = userId,
-                AllUsers = _userManager.Users.Where(u => !u.IsDeleted).ToList()
-            };
-
-            return View(model);
-        }
-       
-        public IActionResult FilteredList(DateTime? startDate, DateTime? endDate, string? userId)
-        {
-            var incomes = _context.Incomes.Include(i => i.User).AsQueryable();
-
-            if (!string.IsNullOrEmpty(userId))
-            {
-                incomes = incomes.Where(i => i.UserId == userId);
-            }
 
             if (startDate.HasValue)
                 incomes = incomes.Where(i => i.Date >= startDate);
@@ -78,20 +42,45 @@ namespace SalonTrack.Controllers
             if (endDate.HasValue)
                 incomes = incomes.Where(i => i.Date <= endDate);
 
-            var incomeList = incomes.ToList();
-            var total = incomeList.Sum(i => i.Amount);
+            var totalCount = await incomes.CountAsync();
+
+            var pagedIncomes = await incomes
+                .OrderByDescending(i => i.Date)
+                .Skip((page - 1) * PageSize)
+                .Take(PageSize)
+                .ToListAsync();
+
+            var expenses = await _context.Expenses.ToListAsync();
+            var now = DateTime.Now;
+            var today = now.Date;
+            var weekStart = now.AddDays(-(int)now.DayOfWeek);
+            var monthStart = new DateTime(now.Year, now.Month, 1);
+            var yearStart = new DateTime(now.Year, 1, 1);
 
             var model = new IncomeListViewModel
             {
-                Incomes = incomeList.OrderByDescending(i => i.Date).ToList(),
-                Total = total,
+                Incomes = pagedIncomes,
+                Total = incomes.Sum(i => i.Amount),
+                TotalExpense = expenses.Sum(e => e.Amount),
+               // NetTotal = incomes.Sum(i => i.Amount) - expenses.Sum(e => e.Amount),
+                TodayTotal = incomes.Where(i => i.Date.Date == today).Sum(i => i.Amount),
+                ThisWeekTotal = incomes.Where(i => i.Date >= weekStart).Sum(i => i.Amount),
+                ThisMonthTotal = incomes.Where(i => i.Date >= monthStart).Sum(i => i.Amount),
+                ThisYearTotal = incomes.Where(i => i.Date >= yearStart).Sum(i => i.Amount),
+                SelectedUserId = userId,
+                AllUsers = await _userManager.Users.Where(u => !u.IsDeleted).ToListAsync(),
                 StartDate = startDate,
                 EndDate = endDate,
-                SelectedUserId = userId,
-                AllUsers = _userManager.Users.Where(u => !u.IsDeleted).ToList()
+                CurrentPage = page,
+                TotalPages = (int)Math.Ceiling(totalCount / (double)PageSize)
             };
 
-            return View("Index", model);
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("_IncomeTablePartial", model);
+            }
+
+            return View(model);
         }
 
         [HttpGet]

@@ -1,0 +1,65 @@
+﻿@model SalonTrack.ViewModels.IncomeListViewModel
+@{
+    var count = (Model.PageNumber - 1) * Model.PageSize + 1;
+}
+
+<div class="mb-3">
+    <strong>Ümumi Gəlir:</strong>
+    <span class="highlight-total">@Model.Total ₼</span>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped align-middle shadow">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>İşçi</th>
+                <th>Məbləğ (₼)</th>
+                <th>Tarix</th>
+                <th>Əməliyyat</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Incomes != null && Model.Incomes.Any())
+            {
+                foreach (var item in Model.Incomes)
+                {
+                    <tr>
+                        <td>@count</td>
+                        <td>@item.User?.UserName</td>
+                        <td>@item.Amount</td>
+                        <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <a href="/Income/Edit/@item.Id" class="btn btn-sm btn-warning">✏️ Dəyiş</a>
+                            <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(@item.Id)">❌ Sil</button>
+                        </td>
+                    </tr>
+                    count++;
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5" class="text-center text-danger">
+                        Heç bir məlumat tapılmadı.
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination justify-content-center">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                    <a class="page-link" href="?page=@i&userId=@Model.SelectedUserId&startDate=@Model.StartDate?.ToString("yyyy-MM-dd")&endDate=@Model.EndDate?.ToString("yyyy-MM-dd")">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
