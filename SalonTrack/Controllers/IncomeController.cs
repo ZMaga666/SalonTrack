@@ -29,9 +29,16 @@ namespace SalonTrack.Controllers
             _userManager = userManager;
         }
 
-        public async Task<IActionResult> Index(string? userId, DateTime? startDate, DateTime? endDate, int page = 1)
+        public async Task<IActionResult> Index(string? userId, DateTime? startDate, DateTime? endDate,bool showDeactivated = false, int page = 1)
         {
             var incomes = _context.Incomes.Include(i => i.User).AsQueryable();
+
+            var usersQuery = _userManager.Users.AsQueryable();
+            if (!showDeactivated)
+            {
+                usersQuery = usersQuery.Where(u => !u.IsDeleted);
+            }
+            var allUsers = await usersQuery.ToListAsync();
 
             if (!string.IsNullOrEmpty(userId))
                 incomes = incomes.Where(i => i.UserId == userId);
@@ -72,7 +79,8 @@ namespace SalonTrack.Controllers
                 StartDate = startDate,
                 EndDate = endDate,
                 CurrentPage = page,
-                TotalPages = (int)Math.Ceiling(totalCount / (double)PageSize)
+                TotalPages = (int)Math.Ceiling(totalCount / (double)PageSize),
+                ShowDeactivated = showDeactivated
             };
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")

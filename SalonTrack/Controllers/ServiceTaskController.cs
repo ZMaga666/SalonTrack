@@ -33,7 +33,9 @@ namespace SalonTrack.Controllers
                                     .ThenInclude(i => i.User)
                                 .Include(t => t.Service)
                                 .Include(t => t.User)
+                                .Where(t=>t.Date.Date == DateTime.Today)
                                 .OrderByDescending(t => t.Date)
+                                .Take(12)
                                 .ToList();
 
             return View(tasks);

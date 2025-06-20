@@ -189,7 +189,10 @@ body.dark-mode .logout-btn:hover {
         font-size: 1.3rem;
     }
 }
-
+.page-link {
+    background-color: rgba(31, 31, 31, 0.5) !important;
+    
+}
 .section-title {
     font-size: 2rem;
     font-weight: 600;
@@ -208,7 +211,14 @@ body.dark-mode .logout-btn:hover {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
 }
-
+body.light-mode .page-link {
+    color:black;
+    background-color: rgba(30, 30, 30, 0.3) !important;
+}
+body.light-mode .alert-info {
+    color:#f9fafb;
+    background-color: #212529;
+}
 body.light-mode .card {
     border: 1px solid rgba(0, 0, 0, 0.15);
     color: #000; /* Tünd boz yazı rəngi */
