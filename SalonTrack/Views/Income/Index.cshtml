@@ -4,8 +4,7 @@
 }
 
 <div class="container py-4">
-
-    <!-- Üst Panel -->
+    <!-- Panel -->
     <div class="row mb-4 text-center">
         <div class="col-md-3 col-sm-6 mb-3">
             <div class="p-3 bg-light shadow rounded">
@@ -39,16 +38,21 @@
         <span class="text-muted ms-2">(Gəlir: @Model.Total ₼ - Xərc: @Model.TotalExpense ₼)</span>
     </div>
 
-    <!-- Filter -->
+    <!-- Filter Form -->
     <form id="filterForm" asp-action="Index" method="get" class="row mb-4 g-3 align-items-end">
         <div class="col-md-3">
-            <label class="form-label">İstifadəçiyə görə filter:</label>
-            <select name="userId" class="form-select" onchange="this.form.submit()">
+            <label class="form-label">İstifadəçiyə görə axtar:</label>
+            <input type="text" id="userSearch" class="form-control mb-2" placeholder="Ad ilə axtar..."/>
+
+
+            <select name="userId" class="form-select" id="userDropdown" onchange="this.form.submit()">
                 <option value="">Hamısı</option>
                 @foreach (var user in Model.AllUsers)
                 {
                     var status = user.IsDeleted ? " (Deaktiv)" : "";
-                    <option value="@user.Id" selected="@(user.Id == Model.SelectedUserId)">
+                    <option value="@user.Id"
+                            data-isdeleted="@user.IsDeleted.ToString().ToLower()"
+                            selected="@(user.Id == Model.SelectedUserId)">
                         @user.UserName @status
                     </option>
                 }
@@ -78,7 +82,7 @@
         </div>
     </form>
 
-    <!-- Cədvəl -->
+    <!-- Income Table -->
     <div id="incomeTable">
         @await Html.PartialAsync("_IncomeTablePartial", Model)
     </div>
@@ -113,12 +117,45 @@
             });
         });
 
-        // Filter AJAX (form is already handled by onchange submits)
-        $("#filterForm").on("submit", function (e) {
-            e.preventDefault();
-            $.get("/Income/Index", $(this).serialize(), function (data) {
-                $("#incomeTable").html(data);
-            });
+        // Debounced search logic
+        let debounceTimer;
+
+        function changeSelectedUser() {
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(function () {
+                const filter = document.getElementById("userSearch").value.toLowerCase();
+                const dropdown = document.getElementById("userDropdown");
+                let matched = false;
+
+                if (filter.length < 3) return;
+
+                for (let i = 0; i < dropdown.options.length; i++) {
+                    const option = dropdown.options[i];
+                    const text = option.text.toLowerCase();
+
+                    if (text.includes(filter) && !matched) {
+                        option.selected = true;
+                        matched = true;
+                    } else {
+                        option.selected = false;
+                    }
+                }
+
+                if (matched) {
+                    document.getElementById("filterForm").submit();
+                }
+            }, 400);
+        }
+
+        // Attach input event once DOM loaded
+        document.addEventListener("DOMContentLoaded", function () {
+            const searchInput = document.getElementById("userSearch");
+            if (searchInput) {
+                searchInput.addEventListener("input", changeSelectedUser);
+            }
         });
     </script>
+}
+
 }

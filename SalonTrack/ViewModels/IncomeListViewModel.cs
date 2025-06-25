@@ -21,7 +21,7 @@ namespace SalonTrack.ViewModels
 
         public string? SelectedUserId { get; set; }
 
-        public List<ApplicationUser> AllUsers { get; set; }
+        public List<ApplicationUser> AllUsers { get; set; } = new();
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
         public int PageSize { get; set; } = 10;

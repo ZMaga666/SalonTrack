@@ -1,6 +1,10 @@
 ﻿@model SalonTrack.ViewModels.IncomeListViewModel
 @{
-    var count = (Model.PageNumber - 1) * Model.PageSize + 1;
+    ViewData["Title"] = "Gəlirlər Siyahısı";
+    int pageNumber = int.Parse(ViewData["Page"].ToString());
+    var j = 0;
+    var i = 1;
+    int k = 1;
 }
 
 <div class="mb-3">
@@ -22,10 +26,12 @@
         <tbody>
             @if (Model.Incomes != null && Model.Incomes.Any())
             {
+                
                 foreach (var item in Model.Incomes)
                 {
+                    j=(pageNumber-1)*10+k;
                     <tr>
-                        <td>@count</td>
+                        <td>@j</td>
                         <td>@item.User?.UserName</td>
                         <td>@item.Amount</td>
                         <td>@item.Date.ToString("yyyy-MM-dd")</td>
@@ -34,7 +40,8 @@
                             <button type="button" class="btn btn-sm btn-danger" onclick="confirmDelete(@item.Id)">❌ Sil</button>
                         </td>
                     </tr>
-                    count++;
+                    k++;
+                    
                 }
             }
             else
@@ -54,7 +61,7 @@
 {
     <nav>
         <ul class="pagination justify-content-center">
-            @for (int i = 1; i <= Model.TotalPages; i++)
+            @for ( i = 1; i <= Model.TotalPages; i++)
             {
                 <li class="page-item @(i == Model.PageNumber ? "active" : "")">
                     <a class="page-link" href="?page=@i&userId=@Model.SelectedUserId&startDate=@Model.StartDate?.ToString("yyyy-MM-dd")&endDate=@Model.EndDate?.ToString("yyyy-MM-dd")">@i</a>

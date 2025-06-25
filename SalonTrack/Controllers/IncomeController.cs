@@ -57,6 +57,8 @@ namespace SalonTrack.Controllers
                 .Take(PageSize)
                 .ToListAsync();
 
+            ViewData["Page"] = page;
+
             var expenses = await _context.Expenses.ToListAsync();
             var now = DateTime.Now;
             var today = now.Date;
@@ -75,7 +77,7 @@ namespace SalonTrack.Controllers
                 ThisMonthTotal = incomes.Where(i => i.Date >= monthStart).Sum(i => i.Amount),
                 ThisYearTotal = incomes.Where(i => i.Date >= yearStart).Sum(i => i.Amount),
                 SelectedUserId = userId,
-                AllUsers = await _userManager.Users.Where(u => !u.IsDeleted).ToListAsync(),
+                AllUsers = allUsers,
                 StartDate = startDate,
                 EndDate = endDate,
                 CurrentPage = page,
