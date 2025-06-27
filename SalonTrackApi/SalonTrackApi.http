@@ -1,0 +1,6 @@
+@SalonTrackApi_HostAddress = http://localhost:5096
+
+GET {{SalonTrackApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
