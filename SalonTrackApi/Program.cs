@@ -1,6 +1,8 @@
 
 using SalonTrackApi.Extensions;
+using SalonTrackApi.LoggerService;
 using SalonTrackApi.Repositories;
+using SalonTrackApi.Services;
 
 namespace SalonTrackApi
 {
@@ -17,6 +19,10 @@ namespace SalonTrackApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
+            builder.Services.AddScoped<ILoggerManager, LoggerManager>();
+            builder.Services.AddScoped<IExpenseService, ExpenseService>();
 
             var app = builder.Build();
 

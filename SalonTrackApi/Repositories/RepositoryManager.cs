@@ -2,15 +2,28 @@
 
 namespace SalonTrackApi.Repositories
 {
-    public class RepositoryManager
+    public class RepositoryManager : IRepositoryManager
     {
         private readonly AppDbContext _context;
-        private IExpenseRepository? _expense;
+        private Lazy<IExpenseRepository>? _expenseRepo;
 
-        public RepositoryManager(AppDbContext context) => _context = context;
+        public RepositoryManager(AppDbContext context)
+        {
+            _context = context;
+            _expenseRepo = new Lazy<IExpenseRepository>(() => new ExpenseRepository(_context));
 
-        public IExpenseRepository Expense => _expense ??= new ExpenseRepository(_context);
 
-        public async Task SaveAsync() => await _context.SaveChangesAsync();
+
+        }
+
+        public IExpenseRepository Expense => _expenseRepo.Value;
+
+        public async Task SaveAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
     }
+
+
 }
+          

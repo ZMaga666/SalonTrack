@@ -2,25 +2,26 @@
 using Microsoft.AspNetCore.Mvc;
 using SalonTrackApi.Entities;
 using SalonTrackApi.Repositories;
+using SalonTrackApi.Services;
 
 namespace SalonTrackApi.Controllers
 {
-    
+
     [ApiController]
     [Route("api/[controller]")]
     public class ExpenseController : ControllerBase
     {
-        private readonly IRepositoryManager _repository;
+        private readonly IServiceManager _services;
 
-        public ExpenseController(IRepositoryManager repository)
+        public ExpenseController(IServiceManager services)
         {
-            _repository = repository;
+            _services = services;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var expenses = await _repository.Expense.GetAllAsync();
+            var expenses = await _services.ExpenseService.GetAllExpenseAsync();
             return Ok(expenses);
         }
 
@@ -29,22 +30,33 @@ namespace SalonTrackApi.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            expense.Date = DateTime.Now;
-            await _repository.Expense.CreateAsync(expense);
-            await _repository.SaveAsync();
-            return Ok(expense);
+            var created = await _services.ExpenseService.CreateExpenseAsync(expense);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var expense = await _repository.Expense.GetByIdAsync(id);
-            if (expense is null) return NotFound();
+            try
+            {
+                await _services.ExpenseService.DeleteExpenseAsync(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
 
-            _repository.Expense.Delete(expense);
-            await _repository.SaveAsync();
-            return NoContent();
+
+
         }
-    }
 
-}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var all = await _services.ExpenseService.GetAllExpenseAsync();
+            var expense = all.FirstOrDefault(e => e.Id == id);
+            return expense is null ? NotFound() : Ok(expense);
+        }
+
+    }   }

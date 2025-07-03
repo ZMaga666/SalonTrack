@@ -2,11 +2,14 @@
 
 namespace SalonTrackApi.Repositories
 {
-    public interface IExpenseRepository
+    public interface IExpenseRepository : IRepositoryBase<Expense>
     {
-        Task<List<Expense>> GetAllAsync();
-        Task<Expense?> GetByIdAsync(int id);
-        Task CreateAsync(Expense expense);
-        void Delete(Expense expense);
+        // Uncomment the methods below if you want to implement them in the repository
+        // and remove the comments from the ExpenseRepository class.
+    
+    //    Task<List<Expense>> GetAllAsync();
+    //    Task<Expense?> GetByIdAsync(int id);
+    //    Task CreateAsync(Expense expense);
+    //    void Delete(Expense expense);
     }
 }
