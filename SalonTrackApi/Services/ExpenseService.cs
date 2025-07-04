@@ -1,4 +1,5 @@
-﻿using SalonTrackApi.Entities;
+﻿using SalonTrackApi.Contracts;
+using SalonTrackApi.Entities;
 using SalonTrackApi.LoggerService;
 using SalonTrackApi.Repositories;
 

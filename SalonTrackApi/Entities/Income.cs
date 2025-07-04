@@ -20,7 +20,8 @@ namespace SalonTrackApi.Entities
         // 👇 Əlavə olunur
         public string? UserId { get; set; }
 
-        //[ForeignKey("UserId")]
-        //public ApplicationUser? User { get; set; }
+
+        [ForeignKey("UserId")]
+        public User User { get; set; }
     }
 }

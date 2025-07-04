@@ -1,4 +1,5 @@
 
+using SalonTrackApi.Contracts;
 using SalonTrackApi.Extensions;
 using SalonTrackApi.LoggerService;
 using SalonTrackApi.Repositories;
@@ -20,9 +21,7 @@ namespace SalonTrackApi
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddScoped<IServiceManager, ServiceManager>();
-            builder.Services.AddScoped<ILoggerManager, LoggerManager>();
-            builder.Services.AddScoped<IExpenseService, ExpenseService>();
+         
 
             var app = builder.Build();
 

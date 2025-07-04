@@ -1,7 +1,7 @@
 ﻿using SalonTrackApi.Entities;
 
 
-namespace SalonTrackApi.Services
+namespace SalonTrackApi.Contracts
 {
     public interface IExpenseService
     {

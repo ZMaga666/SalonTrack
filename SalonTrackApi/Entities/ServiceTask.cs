@@ -23,5 +23,7 @@ namespace SalonTrackApi.Entities
 
         public int? IncomeId { get; set; }
         public Income? Income { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
+        public string Description { get; set; } = string.Empty;
     }
 }
