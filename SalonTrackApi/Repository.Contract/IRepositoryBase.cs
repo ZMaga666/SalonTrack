@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace SalonTrackApi.Repositories
+namespace SalonTrackApi.Repository.Contract
 {
 
     public interface IRepositoryBase<T>

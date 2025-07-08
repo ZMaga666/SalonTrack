@@ -52,5 +52,6 @@ namespace SalonTrack.Controllers
 
             return View(service);
         }
+
     }
 }

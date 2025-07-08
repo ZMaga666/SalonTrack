@@ -2,6 +2,7 @@
 using SalonTrackApi.Entities;
 using SalonTrackApi.LoggerService;
 using SalonTrackApi.Repositories;
+using SalonTrackApi.Repository.Contract;
 
 namespace SalonTrackApi.Services
 {

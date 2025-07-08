@@ -1,7 +1,6 @@
 ﻿using SalonTrackApi.Repository.Contract;
-using SalonTrackApi.Repository.Contracts;
 
-namespace SalonTrackApi.Repositories
+namespace SalonTrackApi.Repository.Contract
 {
     public interface IRepositoryManager
     {

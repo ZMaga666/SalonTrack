@@ -4,6 +4,7 @@ using SalonTrackApi.LoggerService;
 using SalonTrackApi.Repositories;
 using SalonTrackApi.Entities;
 using Microsoft.EntityFrameworkCore;
+using SalonTrackApi.Repository.Contract;
 
 namespace SalonTrackApi.Services
 {

@@ -4,7 +4,7 @@ using SalonTrackApi.Repository.Contract;
 
 namespace SalonTrackApi.Repositories
 {
-    public class IncomeRepository(AppDbContext appDbContext):RepositoryBase<Income>(appDbContext),IIncomeRepository
+    public class UserRepository(AppDbContext appDbContext) : RepositoryBase<User>(appDbContext), IUserRepository
     {
     }
 }

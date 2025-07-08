@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SalonTrackApi.Data;
+using SalonTrackApi.Repository.Contract;
 using System.Linq.Expressions;
 
 namespace SalonTrackApi.Repositories

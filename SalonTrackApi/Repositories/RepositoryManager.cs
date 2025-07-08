@@ -1,7 +1,7 @@
 ﻿using SalonTrackApi.Contracts;
 using SalonTrackApi.Data;
 using SalonTrackApi.Repository.Contract;
-using SalonTrackApi.Repository.Contracts;
+
 
 namespace SalonTrackApi.Repositories
 {

@@ -1,6 +1,6 @@
 ﻿using SalonTrackApi.Data;
 using SalonTrackApi.Entities;
-using SalonTrackApi.Repository.Contracts;
+using SalonTrackApi.Repository.Contract;
 
 namespace SalonTrackApi.Repositories
 {
