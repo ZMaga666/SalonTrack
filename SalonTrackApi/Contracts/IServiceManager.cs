@@ -9,5 +9,6 @@ namespace SalonTrackApi.Contracts
         IServiceTaskService ServiceTaskService { get; }
         IServiceService ServiceService { get; }
         IIncomeService IncomeService { get; }
+        IUserService UserService { get; }
     }
 }

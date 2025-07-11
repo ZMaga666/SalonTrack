@@ -27,8 +27,7 @@ public class RoleController : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        //var roles = _roleManager.Roles.AsNoTracking().ToList();
-        //return View(roles);
+        
         var roles = _roleManager.Roles.Select(r => r.Name).ToList();
         ViewBag.Roles = new SelectList(roles);
 
@@ -36,38 +35,7 @@ public class RoleController : Controller
         return View(roleList);
     }
 
-    //[HttpGet]
-    //public IActionResult CreateUser()
-    //{
-    //    var roles = _roleManager.Roles.Select(r => r.Name).ToList();
-    //    ViewBag.Roles = new SelectList(roles);
-    //    return View();
-    //}
-
-    //[HttpPost]
-    //public async Task<IActionResult> CreateUser(string username, string password, string role)
-    //{
-    //    if (await _userManager.FindByNameAsync(username) != null)
-    //    {
-    //        TempData["Error"] = "İstifadəçi artıq mövcuddur.";
-    //        return RedirectToAction("CreateUser");
-    //    }
-
-    //    var user = new ApplicationUser { UserName = username, IsDeleted = false };
-    //    var result = await _userManager.CreateAsync(user, password);
-
-    //    if (result.Succeeded)
-    //    {
-    //        await _userManager.AddToRoleAsync(user, role);
-    //        TempData["Success"] = "İstifadəçi uğurla yaradıldı.";
-    //    }
-    //    else
-    //    {
-    //        TempData["Error"] = string.Join(", ", result.Errors.Select(e => e.Description));
-    //    }
-
-    //    return RedirectToAction("CreateUser");
-    //}
+    
 
     [HttpGet]
     public IActionResult CreateRole() => View();
@@ -104,7 +72,7 @@ public class RoleController : Controller
 
         foreach (var user in usersInRole)
         {
-            // Soft delete: IsDeleted flag set to true
+            
             user.IsDeleted = true;
             user.LockoutEnd = DateTime.MaxValue;
             await _userManager.UpdateAsync(user);

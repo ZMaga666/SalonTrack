@@ -1,14 +1,16 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SalonTrackApi.Contracts;
 using SalonTrackApi.DTO;
+using SalonTrackApi.Entities;
 using SalonTrackApi.LoggerService;
 using SalonTrackApi.Repository.Contract;
 
 namespace SalonTrackApi.Services
 {
     public class UserService(
-    UserManager<ApplicationUser> userManager,
+    UserManager<User> userManager,
     RoleManager<IdentityRole> roleManager,
     IRepositoryManager repository,
     ILoggerManager logger,
@@ -47,12 +49,12 @@ namespace SalonTrackApi.Services
             return result;
         }
 
-        public async Task<ApplicationUser> CreateUserAsync(UserCreateDto dto)
+        public async Task<User> CreateUserAsync(UserCreateDto dto)
         {
-            if (await userManager.FindByNameAsync(dto.UserName) is not null)
-                throw new Exception("Bu istifadəçi adı artıq mövcuddur.");
+          //  if (await userManager.FindByNameAsync(dto.UserName) is not null)
+           //     throw new Exception("Bu istifadəçi adı artıq mövcuddur.");
 
-            var user = new ApplicationUser
+            var user = new User
             {
                 UserName = dto.UserName,
                 CreatedAt = DateTime.Now,
@@ -63,7 +65,7 @@ namespace SalonTrackApi.Services
             if (!result.Succeeded)
                 throw new Exception(string.Join(", ", result.Errors.Select(e => e.Description)));
 
-            await userManager.AddToRoleAsync(user, dto.Role);
+          //  await userManager.AddToRoleAsync(user, dto.Role);
             return user;
         }
 
